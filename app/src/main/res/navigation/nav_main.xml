@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/fragment_calender">
+
+    <fragment
+        android:id="@+id/planList"
+        android:name="com.example.node_project.PlanList"
+        android:label="fragment_plan_list"
+        tools:layout="@layout/fragment_plan_list" >
+        <action
+            android:id="@+id/action_planList_to_planList2"
+            app:destination="@id/planList2" />
+    </fragment>
+    <fragment
+        android:id="@+id/budget"
+        android:name="com.example.node_project.Budget"
+        android:label="fragment_budget"
+        tools:layout="@layout/fragment_budget" >
+        <action
+            android:id="@+id/action_budget_to_budget2"
+            app:destination="@id/budget2" />
+    </fragment>
+    <fragment
+        android:id="@+id/planList2"
+        android:name="com.example.node_project.PlanList2"
+        android:label="fragment_plan_list2"
+        tools:layout="@layout/fragment_plan_list2" />
+    <fragment
+        android:id="@+id/cash"
+        android:name="com.example.node_project.Cash"
+        android:label="fragment_cash"
+        tools:layout="@layout/fragment_cash" >
+        <action
+            android:id="@+id/action_cash_to_cash2"
+            app:destination="@id/cash2" />
+    </fragment>
+    <fragment
+        android:id="@+id/cash2"
+        android:name="com.example.node_project.Cash2"
+        android:label="fragment_cash2"
+        tools:layout="@layout/fragment_cash2" />
+    <fragment
+        android:id="@+id/budget2"
+        android:name="com.example.node_project.Budget2"
+        android:label="fragment_budget2"
+        tools:layout="@layout/fragment_budget2" />
+    <fragment
+        android:id="@+id/fragment_calender"
+        android:name="com.example.node_project.fragment_calender"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender" >
+        <action
+            android:id="@+id/action_fragment_calender_to_cash"
+            app:destination="@id/cash" />
+        <action
+            android:id="@+id/action_fragment_calender_to_budget"
+            app:destination="@id/budget" />
+        <action
+            android:id="@+id/action_fragment_calender_to_planList"
+            app:destination="@id/planList" />
+    </fragment>
+</navigation>
