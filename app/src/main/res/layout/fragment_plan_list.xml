@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_primary90">
+    android:background="#D5F2FF">
 
     <TextView
         android:id="@+id/planFrag"
@@ -32,13 +32,13 @@
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="60dp"
-        android:layout_height="50dp"
+        android:layout_width="65dp"
+        android:layout_height="45dp"
         android:background="#D92B2B"
         android:text="삭제"
         android:textSize="8sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addButton"
-        tools:layout_editor_absoluteX="313dp" />
+        tools:layout_editor_absoluteX="317dp"
+        tools:layout_editor_absoluteY="145dp" />
 
     <ListView
         android:id="@+id/locationListView"
