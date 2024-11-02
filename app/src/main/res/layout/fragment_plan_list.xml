@@ -5,8 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_primary90"
-    android:backgroundTint="#D5F2FF">
+    android:background="#D5F2FF">  <!-- 배경 색상 설정 -->
 
     <TextView
         android:id="@+id/planFrag"
@@ -38,31 +37,27 @@
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="290dp"
-        android:layout_marginBottom="400dp"
+        android:layout_width="65dp"  <!-- 버튼 너비 -->
+        android:layout_height="45dp" <!-- 버튼 높이 -->
         android:background="#D92B2B"
         android:padding="8dp"
         android:text="삭제"
-        android:textSize="12sp"
+        android:textSize="12sp"  <!-- 텍스트 크기 조정 -->
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addButton"  <!-- addButton 오른쪽으로 제약 추가 -->
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/locationListView"
-        android:layout_width="347dp"
-        android:layout_height="428dp"
+        android:layout_width="0dp"  <!-- 넓이를 0dp로 설정하여 제약 조건에 따라 조정 -->
+        android:layout_height="0dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.739" />
+        app:layout_constraintTop_toBottomOf="@id/deleteButton" />  <!-- deleteButton 아래로 제약 추가 -->
 
     <ImageView
         android:id="@+id/imageView"
