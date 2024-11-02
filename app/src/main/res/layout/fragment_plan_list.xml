@@ -7,24 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/material_dynamic_primary90">
 
-    <!-- 제목 -->
-    <TextView
-        android:id="@+id/osTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="OS"
-        android:textColor="@android:color/holo_blue_light"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- 장소선정 제목 -->
-
-    <!-- 추가 및 삭제 버튼 -->
-
-
     <TextView
         android:id="@+id/planFrag"
         android:layout_width="wrap_content"
@@ -41,24 +23,23 @@
 
     <Button
         android:id="@+id/addButton"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:background="#00ADA3"
         android:text="+"
-        tools:layout_editor_absoluteX="219dp"
-        tools:layout_editor_absoluteY="135dp" />
+        tools:layout_editor_absoluteX="231dp"
+        tools:layout_editor_absoluteY="142dp" />
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
         android:background="#D92B2B"
         android:text="삭제"
+        android:textSize="8sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/addButton"
-        tools:layout_editor_absoluteX="315dp" />
+        tools:layout_editor_absoluteX="313dp" />
 
-
-    <!-- 리스트 뷰 -->
     <ListView
         android:id="@+id/locationListView"
         android:layout_width="wrap_content"
@@ -69,5 +50,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/planFrag" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/img"
+        tools:layout_editor_absoluteY="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
