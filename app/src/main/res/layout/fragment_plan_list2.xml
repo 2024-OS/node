@@ -4,4 +4,29 @@
     android:id="@+id/planFrag2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlanList2" />
+    tools:context=".PlanList2" >
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="343dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="468dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="252dp"
+        tools:layout_editor_absoluteY="464dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
