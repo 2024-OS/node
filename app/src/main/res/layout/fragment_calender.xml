@@ -1,80 +1,123 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment_calender">
+    android:padding="20dp"
+    android:background="#E0F7FA"
+    tools:context=".CalendarFragment">
 
-    <!-- 제목 -->
+    <!-- Placeholder for Top Image -->
+    <ImageView
+        android:id="@+id/topImage"
+        android:layout_width="68dp"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="158dp"
+        android:layout_marginTop="1dp"
+        android:src="@drawable/img" />
+
+    <!-- Title "캘린더" -->
     <TextView
-        android:id="@+id/osTextView"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OS"
-        android:textColor="#2196F3"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- 달력 제목 -->
-    <TextView
-        android:id="@+id/calendarTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:text="캘린더"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/osTextView" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="32dp"
+        android:layout_below="@id/topImage"
+        android:layout_marginTop="1dp" />
 
-    <!-- 할 일 목록 제목 -->
+    <!-- Underline -->
+    <View
+        android:id="@+id/titleUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000"
+        android:layout_below="@id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp" />
 
-    <!-- 추가 및 삭제 버튼 -->
-
-    <TextView
-        android:id="@+id/todoTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="<10월 17일 할 일>"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="370dp" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <!-- Calendar View -->
+    <CalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:layout_below="@id/titleUnderline"
+        android:layout_marginTop="4dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <!-- Schedule Title and Buttons -->
+    <LinearLayout
+        android:id="@+id/scheduleHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarView"
+        android:layout_marginTop="1dp"
         android:orientation="horizontal"
-        android:padding="8dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="396dp">
+        android:gravity="center_vertical"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/scheduleTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="&lt;1970년 1월 1일&gt;"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/addButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+" />
+            android:layout_width="70dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/rounded_add_button"
+            android:minWidth="60dp"
+            android:text="＋"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_marginStart="8dp"
-            android:text="삭제" />
+        android:background="@drawable/rounded_delete_button"
+        android:text="삭제"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:minWidth="60dp" />
     </LinearLayout>
 
-    <ListView
-        android:layout_width="281dp"
-        android:layout_height="152dp"
-        tools:layout_editor_absoluteX="65dp"
-        tools:layout_editor_absoluteY="472dp" />
+    <!-- Checklist Container with border -->
+    <LinearLayout
+        android:id="@+id/checklistContainer"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scheduleHeader"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:background="#FFFFFF"
+        android:elevation="6dp"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <!-- 할 일 목록 -->
+        <!-- Checklist with Checkbox -->
+        <ListView
+            android:id="@+id/scheduleListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#000000"
+            android:dividerHeight="1dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent" />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
