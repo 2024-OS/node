@@ -61,5 +61,8 @@
         <action
             android:id="@+id/action_fragment_calender_to_planList"
             app:destination="@id/planList" />
+        <action
+            android:id="@+id/action_fragment_calender_to_cash2"
+            app:destination="@id/cash" />
     </fragment>
 </navigation>
