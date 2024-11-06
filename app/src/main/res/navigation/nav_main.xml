@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/budget"
-        android:name="com.example.node_project.Budget"
+        android:name="com.example.node_project.BudgetFragment"
         android:label="fragment_budget"
         tools:layout="@layout/fragment_budget" >
         <action

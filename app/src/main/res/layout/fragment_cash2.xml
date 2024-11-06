@@ -8,7 +8,7 @@
 
     <!-- Placeholder for Top Image -->
     <LinearLayout
-        android:id="@+id/bottomNavigationBar"
+        android:id="@+id/bottomNavigationBar_cash2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
