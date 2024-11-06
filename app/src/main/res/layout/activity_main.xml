@@ -17,10 +17,9 @@
         android:orientation="horizontal"
         android:padding="10dp"
         android:translationY="0dp"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="631dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 캘린더 아이콘과 텍스트 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="80dp"
@@ -50,7 +49,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <!-- 장소선정 아이콘과 텍스트 -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="82dp"
@@ -80,7 +79,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <!-- 회계내역 아이콘과 텍스트 -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,7 +109,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <!-- 예산안 아이콘과 텍스트 -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -144,11 +143,12 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="629dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_main"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_main" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
