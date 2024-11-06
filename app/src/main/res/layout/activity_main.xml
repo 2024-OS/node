@@ -7,19 +7,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Fragment Container for displaying fragments -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationBar_cash2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:navGraph="@navigation/nav_main" />
+
+    <!-- Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/bottomNavigationBar_cash2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="#E0F7FA"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:translationY="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Calendar Button -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="80dp"
@@ -50,7 +64,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-
+        <!-- Place Selection Button -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="82dp"
@@ -81,7 +95,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-
+        <!-- Accounting Details Button -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -112,7 +126,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-
+        <!-- Budget Button -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -143,16 +157,5 @@
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="629dp"
-        app:defaultNavHost="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_main" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
