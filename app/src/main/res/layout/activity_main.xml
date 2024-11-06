@@ -28,6 +28,7 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/calendarFragment"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
@@ -58,6 +59,7 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/placeFragment"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
@@ -88,6 +90,7 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/accountFragment"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
@@ -118,6 +121,7 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/budgetFragment"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_gravity="center"
