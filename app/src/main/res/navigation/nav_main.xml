@@ -10,21 +10,33 @@
         android:id="@+id/planList"
         android:name="com.example.node_project.PlanList"
         android:label="장소선정"
-        tools:layout="@layout/fragment_plan_list" />
+        tools:layout="@layout/fragment_plan_list" >
+        <action
+            android:id="@+id/action_planList_to_planList2"
+            app:destination="@id/planList2" />
+    </fragment>
 
     <!-- 회계내역 Fragment -->
     <fragment
         android:id="@+id/cash"
         android:name="com.example.node_project.Cash"
         android:label="회계내역"
-        tools:layout="@layout/fragment_cash" />
+        tools:layout="@layout/fragment_cash" >
+        <action
+            android:id="@+id/action_cash_to_cash2"
+            app:destination="@id/cash2" />
+    </fragment>
 
     <!-- 예산안 Fragment -->
     <fragment
         android:id="@+id/budget"
         android:name="com.example.node_project.BudgetFragment"
         android:label="예산안"
-        tools:layout="@layout/fragment_budget" />
+        tools:layout="@layout/fragment_budget" >
+        <action
+            android:id="@+id/action_budget_to_budget2"
+            app:destination="@id/budget2" />
+    </fragment>
 
     <!-- 캘린더 Fragment (초기 화면) -->
     <fragment

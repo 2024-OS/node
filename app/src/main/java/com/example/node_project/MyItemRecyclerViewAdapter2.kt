@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import com.example.node_project.placeholder.PlaceholderContent.PlaceholderItem
 import com.example.node_project.databinding.FragmentPlanListBinding
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- */
 class MyItemRecyclerViewAdapter2(
     private val values: List<PlaceholderItem>
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter2.ViewHolder>() {

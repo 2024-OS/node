@@ -7,29 +7,29 @@
     android:background="#E0F7FA"
     tools:context="BudgetFragment">
 
-    <!-- Placeholder for Top Image -->
+
     <ImageView
         android:id="@+id/topImage"
         android:layout_width="68dp"
         android:layout_height="56dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="150dp"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="150dp"
         android:src="@drawable/img" />
 
-    <!-- Schedule Title and Buttons -->
     <LinearLayout
         android:id="@+id/scheduleHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topImage"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="0dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:translationY="-0.5dp">
 
         <TextView
             android:id="@+id/scheduleTitle"
@@ -37,51 +37,65 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="예산안"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:translationX="20dp" />
 
         <Button
             android:id="@+id/Addbutton"
-            android:layout_width="58dp"
+            android:layout_width="27dp"
             android:layout_height="40dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:backgroundTint="#89A4F8"
             android:text="+"
+            android:textSize="16sp"
             android:textStyle="bold"
+            android:translationX="-4dp"
+            android:translationY="0.5dp"
             app:rippleColor="#1E1F22" />
 
         <Button
             android:id="@+id/buttonDelete"
-            android:layout_width="58dp"
+            android:layout_width="27dp"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:backgroundTint="#F0726F"
             android:text="삭제"
             android:textAlignment="center"
-            android:textColor="#090909"
-            android:textStyle="bold" />
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:translationX="-4dp"
+            android:translationY="0.5dp" />
     </LinearLayout>
 
-    <!-- Scrollable Budget List Container with Table -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.05dp"
+        android:layout_below="@id/scheduleHeader"
+        android:background="#000000"
+        android:translationY="-2.2dp" />
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scheduleHeader"
-        android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
-        android:layout_above="@id/bottomNavigationBar">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="100dp">
 
         <TableLayout
             android:id="@+id/budgetTable"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="#FBFBFB"
             android:stretchColumns="*"
             android:translationY="20dp">
 
-            <!-- Table Header Row -->
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +129,6 @@
                     android:textStyle="bold" />
             </TableRow>
 
-            <!-- Divider Under Header Row -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -123,7 +136,6 @@
                 android:layout_marginBottom="8dp"
                 android:background="#000000" />
 
-            <!-- Example Data Row -->
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,7 +171,6 @@
                     android:text="13,500원" />
             </TableRow>
 
-            <!-- Link Row for Example Data Row -->
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -175,7 +186,6 @@
                     android:textColor="#0000EE" />
             </TableRow>
 
-            <!-- Dotted Divider for Example Data Row -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -184,7 +194,6 @@
                 android:background="#CCCCCC"
                 android:layerType="software" />
 
-            <!-- Another Example Data Row -->
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -220,7 +229,6 @@
                     android:text="21,000원" />
             </TableRow>
 
-            <!-- Link Row for Example Data Row -->
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -236,7 +244,6 @@
                     android:textColor="#0000EE" />
             </TableRow>
 
-            <!-- Dotted Divider for Example Data Row -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -247,19 +254,5 @@
         </TableLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation Bar -->
-    <LinearLayout
-        android:id="@+id/bottomNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#E0F7FA"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:translationY="17dp">
-
-        <!-- Other components (calendar, place, etc.) as defined previously -->
-    </LinearLayout>
 
 </RelativeLayout>

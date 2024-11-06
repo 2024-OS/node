@@ -8,94 +8,81 @@
     android:background="@color/material_dynamic_primary90"
     android:backgroundTint="#E0F7FA">
 
-    <View
-        android:id="@+id/titleUnderline"
-        android:layout_width="365dp"
-        android:layout_height="1dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="608dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/titleUnderline2"
-        android:layout_width="365dp"
-        android:layout_height="1dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="165dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/planFrag"
+        android:id="@+id/title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="250dp"
-        android:layout_marginBottom="550dp"
-        android:padding="8dp"
+        android:layout_below="@id/topImage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="1dp"
         android:text="장소선정"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.28"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.657" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <View
+        android:id="@+id/titleUnderline3"
+        android:layout_width="372dp"
+        android:layout_height="2dp"
+        android:layout_below="@id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
+
+    <Button
+        android:id="@+id/addButton2"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="100dp"
+        android:layout_weight="1"
+        android:backgroundTint="#89A4F8"
+        android:text="+"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:rippleColor="#1E1F22" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="1"
+        android:backgroundTint="#F0726F"
+        android:text="삭제"
+        android:textAlignment="center"
+        android:textColor="#090909"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <ListView
         android:id="@+id/locationListView"
-        android:layout_width="364dp"
-        android:layout_height="435dp"
-        android:layout_marginBottom="14dp"
+        android:layout_width="371dp"
+        android:layout_height="470dp"
         android:background="#FFFFFF"
         android:divider="@color/black"
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.588" />
-
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="53dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="104dp"
-        android:backgroundTint="#73A3FD"
-        android:padding="3dp"
-        android:text="+"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/delete_button"
-        android:layout_width="53dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="36dp"
-        android:backgroundTint="#F97474"
-        android:padding="3dp"
-        android:text="삭제"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3"
+        app:layout_constraintVertical_bias="0.041" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="75dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="68dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

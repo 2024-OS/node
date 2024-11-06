@@ -10,9 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.node_project.placeholder.PlaceholderContent
 
-/**
- * A fragment representing a list of Items.
- */
 class Plan_List : Fragment() {
 
     private var columnCount = 1
