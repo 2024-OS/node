@@ -9,10 +9,6 @@ import android.widget.TextView
 import com.example.node_project.placeholder.PlaceholderContent.PlaceholderItem
 import com.example.node_project.databinding.FragmentItemListBinding
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class MyItemRecyclerViewAdapter(
     private val values: List<PlaceholderItem>
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {

@@ -1,95 +1,89 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0F7FA"
-    tools:context=".Cash2Fragment">
+    tools:context=".Cash2">
 
     <!-- Placeholder for Top Image -->
-
     <ImageView
         android:id="@+id/topImage"
         android:layout_width="68dp"
         android:layout_height="56dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="158dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="3dp"
         android:src="@drawable/img"
-        android:translationX="10dp"
-        android:translationY="20dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Title -->
+    <!-- 선 -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/title4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/topImage"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="34dp"
         android:layout_marginTop="1dp"
-        android:text="2024.06.01"
+        android:text="2024-09-29"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:translationX="0dp"
-        android:translationY="35dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topImage" />
+
+    <View
+        android:id="@+id/titleUnderline"
+        android:layout_width="372dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title4" />
 
     <!-- 삭제 버튼 -->
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="75dp"
+        android:layout_width="72dp"
         android:layout_height="40dp"
-        android:layout_above="@id/titleUnderline"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_toStartOf="@id/completeButton"
+        android:layout_marginEnd="100dp"
         android:backgroundTint="#E57373"
         android:text="삭제"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:translationY="43dp" />
+        android:textColor="#000000"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topImage" />
 
     <!-- 완료 버튼 -->
     <Button
         android:id="@+id/completeButton"
-        android:layout_width="75dp"
+        android:layout_width="72dp"
         android:layout_height="40dp"
-        android:layout_above="@id/titleUnderline"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="#4CAF50"
         android:text="완료"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:translationY="43dp" />
-
-    <View
-        android:id="@+id/titleUnderline"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/title"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="1dp"
-        android:background="#000000"
-        android:translationX="0dp"
-        android:translationY="35dp" />
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topImage" />
 
     <!-- 표 레이아웃 -->
     <LinearLayout
         android:id="@+id/infoTable"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleUnderline"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:background="#FFFFFF"
         android:elevation="4dp"
         android:orientation="vertical"
         android:padding="16dp"
-        android:translationY="15dp">
+        app:layout_constraintTop_toBottomOf="@id/titleUnderline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp">
 
         <!-- 금액 행 -->
         <LinearLayout
@@ -135,7 +129,6 @@
                 android:layout_height="wrap_content"
                 android:text="바람막이 입금"
                 android:textSize="18sp" />
-
         </LinearLayout>
 
         <!-- 영수증 행 -->
@@ -166,22 +159,24 @@
                 android:layout_height="40dp"
                 android:backgroundTint="#E57373"
                 android:text="영수증 삭제"
-                android:textColor="#FFFFFF" />
+                android:textColor="#000000"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
     <!-- 영수증 이미지 레이아웃 -->
     <LinearLayout
         android:id="@+id/receiptContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="303dp"
-        android:layout_below="@+id/infoTable"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:background="#FFFFFF"
         android:elevation="4dp"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/infoTable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp">
 
         <ImageView
             android:layout_width="200dp"
@@ -192,19 +187,5 @@
     </LinearLayout>
 
     <!-- 하단 네비게이션 바 -->
-    <LinearLayout
-        android:id="@+id/bottomNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#E0F7FA"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:translationY="17dp">
 
-        <!-- 네비게이션 아이템들 -->
-        <!-- 동일한 구조 반복 -->
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

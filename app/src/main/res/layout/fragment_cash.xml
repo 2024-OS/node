@@ -5,48 +5,47 @@
     android:layout_height="match_parent"
     android:background="#E0F7FA"
     android:padding="20dp"
-    tools:context=".CashFragment">
+    tools:context=".Cash">
 
-    <!-- Placeholder for Top Image -->
     <ImageView
         android:id="@+id/topImage"
         android:layout_width="68dp"
         android:layout_height="56dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="158dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="13dp"
         android:src="@drawable/img" />
 
-    <!-- Title -->
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topImage"
+        android:layout_below="@+id/topImage"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="-34dp"
         android:text="2024 회계내역"
         android:textSize="24sp"
         android:textStyle="bold"
         android:translationX="0dp"
         android:translationY="35dp" />
 
-    <!-- + 버튼 -->
     <Button
         android:id="@+id/addButton"
-        android:layout_width="100dp"
+        android:layout_width="72dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/topImage"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="#2196F3"
+        android:backgroundTint="#89A4F8"
         android:text="+"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:translationY="90dp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <View
         android:id="@+id/titleUnderline"
@@ -60,15 +59,15 @@
         android:translationX="0dp"
         android:translationY="35dp" />
 
-    <!-- Checklist Container with border -->
     <LinearLayout
         android:id="@+id/checklistContainer"
-        android:layout_width="8dp"
+        android:layout_width="371dp"
         android:layout_height="470dp"
-        android:layout_below="@id/titleUnderline"
+        android:layout_below="@+id/titleUnderline"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="0dp"
         android:background="#FFFFFF"
         android:elevation="6dp"
         android:orientation="vertical"
@@ -76,11 +75,10 @@
         android:translationX="0dp"
         android:translationY="35dp">
 
-        <!-- Checklist with Checkbox -->
         <ListView
             android:id="@+id/scheduleListView"
-            android:layout_width="348dp"
-            android:layout_height="match_parent"
+            android:layout_width="371dp"
+            android:layout_height="450dp"
             android:cacheColorHint="@android:color/transparent"
             android:divider="#000000"
             android:dividerHeight="1dp"
@@ -88,6 +86,5 @@
             android:translationX="0dp" />
     </LinearLayout>
 
-    <!-- 하단 네비게이션 바 -->
 
 </RelativeLayout>
