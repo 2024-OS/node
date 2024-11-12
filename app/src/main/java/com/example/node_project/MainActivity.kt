@@ -16,14 +16,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 시스템 바 패딩 설정 (Edge-to-Edge 디자인)
+        // 시스템 바
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // NavHostFragment에서 NavController 초기화
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? NavHostFragment
         if (navHostFragment != null) {
             navController = navHostFragment.navController
@@ -31,21 +30,21 @@ class MainActivity : AppCompatActivity() {
             throw IllegalStateException("NavHostFragment가 초기화되지 않았습니다.")
         }
 
-        // 클릭 리스너 설정
-        findViewById<FrameLayout>(R.id.calendarFragment).setOnClickListener {
-            navController.navigate(R.id.fragment_calender)
+        // 클릭시 이동
+        findViewById<FrameLayout>(R.id.calendarFragment).setOnClickListener { // 캘린더 버튼 클릭 시
+            navController.navigate(R.id.fragment_calender) //fragment_calender로 이동
         }
 
-        findViewById<FrameLayout>(R.id.placeFragment).setOnClickListener {
-            navController.navigate(R.id.planList)
+        findViewById<FrameLayout>(R.id.placeFragment).setOnClickListener {  // 장소선정 버튼 클릭 시
+            navController.navigate(R.id.planList)  // planList 프래그먼트로 이동
         }
 
-        findViewById<FrameLayout>(R.id.accountFragment).setOnClickListener {
-            navController.navigate(R.id.cash)
+        findViewById<FrameLayout>(R.id.accountFragment).setOnClickListener {  // 회계내역 버튼 클릭 시
+            navController.navigate(R.id.cash)  // cash 프래그먼트로 이동
         }
 
-        findViewById<FrameLayout>(R.id.budgetFragment).setOnClickListener {
-            navController.navigate(R.id.budget)
+        findViewById<FrameLayout>(R.id.budgetFragment).setOnClickListener {  // 예산안 버튼 클릭 시
+            navController.navigate(R.id.budget)  // budget 프래그먼트로 이동
         }
     }
 }

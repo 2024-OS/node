@@ -45,7 +45,7 @@
         android:label="캘린더"
         tools:layout="@layout/fragment_calender" >
 
-        <!-- 캘린더에서 장소선정 화면으로 이동 -->
+        <!-- 캘린더에서 장소선정 화면으로 이동 --> <!--이동할 목적지를 지정 -->
         <action
             android:id="@+id/action_fragment_calender_to_planList"
             app:destination="@id/planList" />

@@ -5,35 +5,29 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     android:background="#E0F7FA"
-    tools:context="BudgetFragment">
+    tools:context=".BudgetFragment">
 
-
+    <!-- 상단 이미지 -->
     <ImageView
         android:id="@+id/topImage"
         android:layout_width="68dp"
         android:layout_height="56dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="150dp"
         android:layout_marginTop="13dp"
-        android:layout_marginEnd="150dp"
         android:src="@drawable/img" />
 
+    <!-- 헤더 레이아웃 -->
     <LinearLayout
         android:id="@+id/scheduleHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topImage"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="0dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:translationY="-0.5dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/scheduleTitle"
-            android:layout_width="178dp"
+            android:layout_width="189dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="예산안"
@@ -41,9 +35,10 @@
             android:textStyle="bold"
             android:translationX="20dp" />
 
+        <!-- 추가 버튼 -->
         <Button
-            android:id="@+id/Addbutton"
-            android:layout_width="27dp"
+            android:id="@+id/bud_add_button"
+            android:layout_width="58dp"
             android:layout_height="40dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
@@ -51,208 +46,35 @@
             android:text="+"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:translationX="-4dp"
-            android:translationY="0.5dp"
             app:rippleColor="#1E1F22" />
 
+        <!-- 삭제 버튼 -->
         <Button
-            android:id="@+id/buttonDelete"
-            android:layout_width="27dp"
+            android:id="@+id/bud_del_button"
+            android:layout_width="58dp"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:backgroundTint="#F0726F"
             android:text="삭제"
             android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:translationX="-4dp"
-            android:translationY="0.5dp" />
+            android:textColor="#090909"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- 구분선 -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="2.05dp"
+        android:layout_height="2dp"
         android:layout_below="@id/scheduleHeader"
-        android:background="#000000"
-        android:translationY="-2.2dp" />
+        android:background="#000000" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <!-- RecyclerView: 예산 항목 리스트 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/budgetRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/scheduleHeader"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="100dp">
-
-        <TableLayout
-            android:id="@+id/budgetTable"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FBFBFB"
-            android:stretchColumns="*"
-            android:translationY="20dp">
-
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <TextView
-                    android:id="@+id/itemHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="물품"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/quantityHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="수량"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/priceHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="가격"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="#000000" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <CheckBox
-                    android:id="@+id/itemCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/itemName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="46dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="축구공 키링" />
-
-                <TextView
-                    android:id="@+id/itemQuantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="46dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="10개" />
-
-                <TextView
-                    android:id="@+id/itemPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="46dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="13,500원" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <TextView
-                    android:id="@+id/itemLink1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="4"
-                    android:padding="4dp"
-                    android:text="https://www.example.com/product/12345"
-                    android:textColor="#0000EE" />
-            </TableRow>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="#CCCCCC"
-                android:layerType="software" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <CheckBox
-                    android:id="@+id/itemCheckbox2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/itemName2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="연어 1kg" />
-
-                <TextView
-                    android:id="@+id/itemQuantity2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="43dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="1개" />
-
-                <TextView
-                    android:id="@+id/itemPrice2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="43dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="21,000원" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <TextView
-                    android:id="@+id/itemLink2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="4"
-                    android:padding="4dp"
-                    android:text="https://www.example.com/product/67890"
-                    android:textColor="#0000EE" />
-            </TableRow>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="#CCCCCC"
-                android:layerType="software" />
-        </TableLayout>
-    </ScrollView>
-
+        android:layout_marginTop="8dp" />
 
 </RelativeLayout>
