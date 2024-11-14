@@ -9,7 +9,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.NavController
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             throw IllegalStateException("NavHostFragment가 초기화되지 않았습니다.")
         }
 
-        // 클릭 리스너 설정
+        // 클릭 리스너 설정 (각 Fragment로 이동)
         findViewById<FrameLayout>(R.id.calendarFragment).setOnClickListener {
             navController.navigate(R.id.fragment_calender)
         }
@@ -40,8 +39,9 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.planList)
         }
 
+        // 올바른 ID로 수정
         findViewById<FrameLayout>(R.id.accountFragment).setOnClickListener {
-            navController.navigate(R.id.cash)
+            navController.navigate(R.id.cash)  // fragment_cash 대신 실제 ID 사용
         }
 
         findViewById<FrameLayout>(R.id.budgetFragment).setOnClickListener {

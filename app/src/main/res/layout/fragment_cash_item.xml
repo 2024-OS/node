@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#E0F7FA"
+    android:padding="20dp"
+    tools:context=".CashItemFragment">
+
+    <!-- 날짜 입력 -->
+    <EditText
+        android:id="@+id/etDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="날짜 입력"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <!-- 금액 입력 -->
+    <TextView
+        android:id="@+id/tvAmountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="금액:"
+        android:layout_below="@id/etDate"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
+
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="금액 입력"
+        android:layout_toEndOf="@id/tvAmountLabel"
+        android:layout_alignBaseline="@id/tvAmountLabel"
+        android:inputType="number" />
+
+    <!-- 내용 입력 -->
+    <TextView
+        android:id="@+id/tvContentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내용:"
+        android:layout_below="@id/tvAmountLabel"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
+
+    <EditText
+        android:id="@+id/etContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="내용 입력"
+        android:layout_toEndOf="@id/tvContentLabel"
+        android:layout_alignBaseline="@id/tvContentLabel"
+        android:inputType="text" />
+
+    <!-- 삭제 버튼 -->
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:text="삭제"
+        android:backgroundTint="#FF8A80"
+        android:textColor="#FFFFFF"
+        android:layout_below="@id/tvContentLabel"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <!-- 완료 버튼 -->
+    <Button
+        android:id="@+id/btnComplete"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:text="완료"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@id/btnDelete"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

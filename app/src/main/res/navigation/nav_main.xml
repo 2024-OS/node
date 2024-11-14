@@ -3,28 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/fragment_calender">
+    app:startDestination="@id/fragment_calender"> <!-- 여기를 확인 -->
+
+    <!-- 캘린더 Fragment (초기 화면) -->
+    <fragment
+        android:id="@+id/fragment_calender"
+        android:name="com.example.node_project.CalendarFragment"
+        android:label="캘린더"
+        tools:layout="@layout/fragment_calender" />
+
+    <!-- 다른 Fragment들 -->
+
 
     <!-- 장소선정 Fragment -->
     <fragment
         android:id="@+id/planList"
         android:name="com.example.node_project.PlanList"
         android:label="장소선정"
-        tools:layout="@layout/fragment_plan_list" >
-        <action
-            android:id="@+id/action_planList_to_planList2"
-            app:destination="@id/planList2" />
-    </fragment>
+        tools:layout="@layout/fragment_plan_list" />
 
     <!-- 회계내역 Fragment -->
     <fragment
         android:id="@+id/cash"
         android:name="com.example.node_project.Cash"
         android:label="회계내역"
-        tools:layout="@layout/fragment_cash" >
+        tools:layout="@layout/fragment_cash">
+        <!-- CashItemFragment로 이동하는 액션 -->
         <action
-            android:id="@+id/action_cash_to_cash2"
-            app:destination="@id/cash2" />
+            android:id="@+id/action_cash_to_cashItemFragment"
+            app:destination="@id/cashItemFragment" />
+    </fragment>
+
+    <!-- CashItemFragment -->
+    <fragment
+        android:id="@+id/cashItemFragment"
+        android:name="com.example.node_project.CashItemFragment"
+        android:label="Cash Item"
+        tools:layout="@layout/fragment_cash_item">
+        <!-- Cash로 돌아가는 액션 -->
+        <action
+            android:id="@+id/action_cashItemFragment_to_cash"
+            app:destination="@id/cash" />
     </fragment>
 
     <!-- 예산안 Fragment -->
@@ -32,51 +51,5 @@
         android:id="@+id/budget"
         android:name="com.example.node_project.BudgetFragment"
         android:label="예산안"
-        tools:layout="@layout/fragment_budget" >
-        <action
-            android:id="@+id/action_budget_to_budget2"
-            app:destination="@id/budget2" />
-    </fragment>
-
-    <!-- 캘린더 Fragment (초기 화면) -->
-    <fragment
-        android:id="@+id/fragment_calender"
-        android:name="com.example.node_project.fragment_calender"
-        android:label="캘린더"
-        tools:layout="@layout/fragment_calender" >
-
-        <!-- 캘린더에서 장소선정 화면으로 이동 -->
-        <action
-            android:id="@+id/action_fragment_calender_to_planList"
-            app:destination="@id/planList" />
-
-        <!-- 캘린더에서 회계내역 화면으로 이동 -->
-        <action
-            android:id="@+id/action_fragment_calender_to_cash"
-            app:destination="@id/cash" />
-
-        <!-- 캘린더에서 예산안 화면으로 이동 -->
-        <action
-            android:id="@+id/action_fragment_calender_to_budget"
-            app:destination="@id/budget" />
-    </fragment>
-
-    <!-- 추가로 필요한 Fragment들 -->
-    <fragment
-        android:id="@+id/planList2"
-        android:name="com.example.node_project.PlanList2"
-        android:label="fragment_plan_list2"
-        tools:layout="@layout/fragment_plan_list2" />
-
-    <fragment
-        android:id="@+id/cash2"
-        android:name="com.example.node_project.Cash2"
-        android:label="fragment_cash2"
-        tools:layout="@layout/fragment_cash2" />
-
-    <fragment
-        android:id="@+id/budget2"
-        android:name="com.example.node_project.Budget2"
-        android:label="fragment_budget2"
-        tools:layout="@layout/fragment_budget2" />
+        tools:layout="@layout/fragment_budget" />
 </navigation>
