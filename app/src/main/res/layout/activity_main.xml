@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -31,6 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- 캘린더 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="80dp"
@@ -61,9 +63,10 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <!-- 장소선정 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="82dp"
+            android:layout_height="80dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -91,10 +94,10 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-
+        <!-- 회계내역 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -122,9 +125,10 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <!-- 예산안 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
