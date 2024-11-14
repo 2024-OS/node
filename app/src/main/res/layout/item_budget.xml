@@ -1,33 +1,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="8dp">
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/itemName"
-        android:layout_width="0dp"
+    <!-- 체크박스, 물품, 수량, 가격을 한 줄에 배치 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="Item Name" />
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/itemQuantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="Qty" />
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
+        <EditText
+            android:id="@+id/itemName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Item Name" />
+
+        <EditText
+            android:id="@+id/itemQuantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:hint="Qty" />
+
+        <EditText
+            android:id="@+id/itemPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:hint="Price" />
+    </LinearLayout>
+
+    <!-- 링크 입력란 (물품, 수량, 가격 아래에 위치, 체크리스트 안쪽에 배치) -->
     <EditText
-        android:id="@+id/itemPrice"
-        android:layout_width="0dp"
+        android:id="@+id/itemLink"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="Price" />
+        android:hint="Item Link" />
 
 </LinearLayout>

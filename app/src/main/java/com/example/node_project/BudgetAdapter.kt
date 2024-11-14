@@ -33,6 +33,7 @@ class BudgetAdapter(private val budgetList: MutableList<BudgetItem>) :
             binding.itemName.setText(item.itemName)
             binding.itemQuantity.setText(item.itemQuantity)
             binding.itemPrice.setText(item.itemPrice)
+            binding.itemLink.setText(item.itemLink) // 링크 입력란 추가
             binding.checkBox.isChecked = item.isChecked
 
             // 체크박스 상태 변경 리스너
@@ -68,6 +69,17 @@ class BudgetAdapter(private val budgetList: MutableList<BudgetItem>) :
                 override fun afterTextChanged(s: Editable?) {
                     item.itemPrice = s.toString()
                     database.child(item.id).child("itemPrice").setValue(item.itemPrice)
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+
+            // 링크 변경 시 Firebase 업데이트 (추가된 부분)
+            binding.itemLink.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    item.itemLink = s.toString()
+                    database.child(item.id).child("itemLink").setValue(item.itemLink)
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
