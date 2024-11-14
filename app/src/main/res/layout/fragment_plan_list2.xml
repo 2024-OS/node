@@ -2,38 +2,33 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/planFlag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_dynamic_primary90"
     android:backgroundTint="#E0F7FA">
 
+    <!-- title3 TextView 수정 (제약조건 추가 및 하드코딩된 텍스트 리소스 파일 사용) -->
     <TextView
         android:id="@+id/title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topImage"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="1dp"
         android:text="지도"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
 
     <View
         android:id="@+id/titleUnderline2"
         android:layout_width="372dp"
         android:layout_height="2dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginTop="1dp"
         android:background="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title3" />
+        app:layout_constraintTop_toBottomOf="@id/title3" />
 
+    <!-- imageView에 contentDescription 추가 -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="68dp"
@@ -43,16 +38,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img" />
+        app:srcCompat="@drawable/img"
+        android:contentDescription="이미지 설명" /> <!-- contentDescription 추가 -->
 
+    <!-- imageView2에 contentDescription 추가 -->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="247dp"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleUnderline2"
-        app:srcCompat="@drawable/picture" />
-
+        app:layout_constraintTop_toBottomOf="@id/titleUnderline2"
+        app:srcCompat="@drawable/picture"
+        android:contentDescription="이미지 설명" /> <!-- contentDescription 추가 -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
