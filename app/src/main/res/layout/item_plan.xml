@@ -47,4 +47,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/heartButton"
         app:layout_constraintEnd_toEndOf="@+id/heartButton"
         app:layout_constraintTop_toTopOf="@+id/heartButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

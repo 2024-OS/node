@@ -8,6 +8,16 @@
     android:background="@color/material_dynamic_primary90"
     android:backgroundTint="#E0F7FA">
 
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="71dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:text="지도"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/addButtonPlan"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
     <TextView
         android:id="@+id/title2"
         android:layout_width="wrap_content"
@@ -83,8 +93,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3" />
+        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

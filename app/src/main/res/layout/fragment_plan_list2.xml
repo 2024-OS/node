@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapFrag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_dynamic_primary90"
@@ -12,6 +13,7 @@
         android:id="@+id/title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="지도"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -35,21 +37,21 @@
         android:layout_height="56dp"
         android:layout_marginTop="33dp"
         android:layout_marginEnd="3dp"
+        android:contentDescription="이미지 설명"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img"
-        android:contentDescription="이미지 설명" /> <!-- contentDescription 추가 -->
+        app:srcCompat="@drawable/img" /> <!-- contentDescription 추가 -->
 
     <!-- imageView2에 contentDescription 추가 -->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="247dp"
         android:layout_height="0dp"
+        android:contentDescription="이미지 설명"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleUnderline2"
-        app:srcCompat="@drawable/picture"
-        android:contentDescription="이미지 설명" /> <!-- contentDescription 추가 -->
+        app:srcCompat="@drawable/picture" /> <!-- contentDescription 추가 -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
