@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.node_project.databinding.FragmentPlanListBinding
+import androidx.navigation.fragment.findNavController
 
 class PlanList : Fragment() {
 
@@ -35,6 +36,11 @@ class PlanList : Fragment() {
             deleteCheckedItems() // 체크된 항목 삭제
         }
 
+        // 지도 버튼 클릭 시 새로운 프래그먼트로 이동
+        binding.mapButton.setOnClickListener {
+            findNavController().navigate(R.id.action_planList_to_mapFrag)
+        }
+
         return binding.root
     }
 
@@ -53,4 +59,6 @@ class PlanList : Fragment() {
         }
         planListAdapter.notifyDataSetChanged() // 어댑터에 변경 사항 알림
     }
+
+
 }

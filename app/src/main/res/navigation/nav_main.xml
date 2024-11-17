@@ -34,11 +34,19 @@
         android:name="com.example.node_project.PlanList"
         android:label="장소선정"
         tools:layout="@layout/fragment_plan_list">
+
+        <!-- 장소선정에서 지도 Fragment로 이동하는 액션 추가 -->
         <action
-            android:id="@+id/action_planList_to_planList2"
-            app:destination="@id/action_planList_to_planList2" />
+            android:id="@+id/action_planList_to_mapFrag"
+            app:destination="@id/fragment_plan_list2" />
     </fragment>
 
+    <!-- 지도 Fragment (fragment_plan_list2) -->
+    <fragment
+        android:id="@+id/fragment_plan_list2"
+        android:name="com.example.node_project.MapFragment"
+        android:label="지도"
+        tools:layout="@layout/fragment_plan_list2" />
 
     <!-- 회계내역 Fragment -->
     <fragment
@@ -46,6 +54,7 @@
         android:name="com.example.node_project.Cash"
         android:label="회계내역"
         tools:layout="@layout/fragment_cash">
+
         <action
             android:id="@+id/action_cash_to_cashItemFragment"
             app:destination="@id/cashItemFragment" />
@@ -57,6 +66,7 @@
         android:name="com.example.node_project.CashItemFragment"
         android:label="Cash Item"
         tools:layout="@layout/fragment_cash_item">
+
         <action
             android:id="@+id/action_cashItemFragment_to_cash"
             app:destination="@id/cash" />
