@@ -20,7 +20,8 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:ignore="NotSibling" />
 
     <View
         android:id="@+id/titleUnderline3"
@@ -33,10 +34,11 @@
         android:background="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title2" />
+        app:layout_constraintTop_toBottomOf="@+id/title2"
+        tools:ignore="NotSibling" />
 
     <Button
-        android:id="@+id/addButton2"
+        android:id="@+id/addButtonPlan"
         android:layout_width="72dp"
         android:layout_height="40dp"
         android:layout_marginEnd="100dp"
@@ -64,19 +66,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <ListView
-        android:id="@+id/locationListView"
-        android:layout_width="371dp"
-        android:layout_height="470dp"
-        android:background="#FFFFFF"
-        android:divider="@color/black"
-        android:dividerHeight="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3"
-        app:layout_constraintVertical_bias="0.041" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="68dp"
@@ -87,6 +76,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rec_plan"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
