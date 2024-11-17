@@ -25,10 +25,17 @@ class PlanListAdapter(private val planList: MutableList<PlanItem>) :
         fun bind(item: PlanItem) {
             binding.itemName.setText(item.title)
             binding.checkBox.isChecked = item.isChecked
+            binding.scoreText.text = item.score.toString() // 점수 표시
 
             // 체크박스 상태 변경 리스너
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
                 item.isChecked = isChecked
+            }
+
+            // 하트 버튼 클릭 리스너
+            binding.heartButton.setOnClickListener {
+                item.score += 1 // 점수 증가
+                binding.scoreText.text = item.score.toString() // 점수 업데이트
             }
         }
     }
