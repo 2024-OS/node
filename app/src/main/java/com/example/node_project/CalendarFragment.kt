@@ -59,7 +59,9 @@ class CalendarFragment : Fragment() {
         scheduleTitle.text = selectedDate
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            selectedDate = "$year-${month + 1}-$dayOfMonth"
+            // 날짜 변경 시 '의 할일' 추가
+            val newDate = "$year-${month + 1}-$dayOfMonth"
+            selectedDate = "$newDate 의 할일"
             scheduleTitle.text = selectedDate
             updateScheduleList()
         }
@@ -90,6 +92,7 @@ class CalendarFragment : Fragment() {
     private fun getTodayDate(): String {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(calendar.time)
+        val date = dateFormat.format(calendar.time)
+        return "$date 의 할일"
     }
 }
