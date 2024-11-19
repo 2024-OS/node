@@ -9,16 +9,6 @@
     tools:context=".Cash">
 
     <!-- 상단 이미지 -->
-    <ImageView
-        android:id="@+id/topImage"
-        android:layout_width="68dp"
-        android:layout_height="56dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="3dp"
-        android:src="@drawable/img" />
 
     <!-- 제목 텍스트 -->
     <TextView
@@ -27,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/topImage"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="100dp"
         android:text="2024 회계내역"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -64,6 +54,19 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/topImage3"
+        android:layout_width="68dp"
+        android:layout_height="56dp"
+        android:layout_alignBottom="@+id/topImage"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="OS 이미지"
+        android:src="@drawable/img" />
 
 
 </RelativeLayout>

@@ -29,6 +29,7 @@ class Cash : Fragment() {
                 putString("date", cashItem.date)
                 putString("amount", cashItem.amount)
                 putString("content", cashItem.content)
+                putString("imageUri", cashItem.imageUri) // 이미지 URI도 함께 전달
             }
             findNavController().navigate(R.id.action_cash_to_cashItemFragment, bundle)
         }
@@ -48,10 +49,11 @@ class Cash : Fragment() {
             val date = bundle.getString("date")
             val amount = bundle.getString("amount")
             val content = bundle.getString("content")
+            val imageUri = bundle.getString("imageUri") // 이미지 URI도 받기
 
             // 값이 있으면 아이템 추가
             if (!date.isNullOrEmpty()) {
-                addItem(CashItem(date, amount ?: "", content ?: ""))
+                addItem(CashItem(date, amount ?: "", content ?: "", imageUri))  // 이미지 URI 포함하여 아이템 추가
             }
         }
 
