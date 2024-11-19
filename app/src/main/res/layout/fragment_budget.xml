@@ -71,12 +71,24 @@
         android:layout_below="@id/scheduleHeader"
         android:background="#000000" />
 
-    <!-- RecyclerView: 예산 항목 리스트 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/budgetRecyclerView"
+    <!-- 하얀색 박스로 RecyclerView 감싸기 -->
+    <LinearLayout
+        android:id="@+id/budgetListContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/scheduleHeader"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:elevation="4dp">
+
+        <!-- RecyclerView: 예산 항목 리스트 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/budgetRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 
 </RelativeLayout>

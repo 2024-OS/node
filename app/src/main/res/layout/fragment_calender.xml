@@ -95,11 +95,23 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- RecyclerView: 일정 목록 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/scheduleRecyclerView"
+    <!-- RecyclerView: 일정 목록을 하얀색 박스로 감싸기 -->
+    <LinearLayout
+        android:id="@+id/scheduleListContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scheduleHeader"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:elevation="4dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scheduleRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
 </RelativeLayout>
