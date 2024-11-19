@@ -10,13 +10,14 @@
 
     <Button
         android:id="@+id/mapButton"
-        android:layout_width="71dp"
+        android:layout_width="68dp"
         android:layout_height="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="4dp"
         android:text="지도"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/addButtonPlan"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/topImage2" />
 
     <TextView
         android:id="@+id/title2"
@@ -25,12 +26,12 @@
         android:layout_below="@id/topImage"
         android:layout_alignParentStart="true"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="111dp"
         android:text="장소선정"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="NotSibling" />
 
     <View
@@ -51,6 +52,7 @@
         android:id="@+id/addButtonPlan"
         android:layout_width="72dp"
         android:layout_height="40dp"
+        android:layout_marginTop="109dp"
         android:layout_marginEnd="100dp"
         android:layout_weight="1"
         android:backgroundTint="#89A4F8"
@@ -58,13 +60,14 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="#1E1F22" />
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="72dp"
         android:layout_height="40dp"
+        android:layout_marginTop="109dp"
         android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:backgroundTint="#F0726F"
@@ -74,29 +77,31 @@
         android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="68dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rec_plan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleUnderline3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/mapButton" />
+
+    <ImageView
+        android:id="@+id/topImage2"
+        android:layout_width="68dp"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="33dp"
+        app:layout_constraintBottom_toTopOf="@+id/mapButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

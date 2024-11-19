@@ -12,7 +12,9 @@
         android:id="@+id/topImage"
         android:layout_width="68dp"
         android:layout_height="56dp"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="13dp"
         android:src="@drawable/img" />
 
