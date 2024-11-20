@@ -22,7 +22,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_plan_list2, container, false) // XML 레이아웃 인플레이트
+        val view = inflater.inflate(R.layout.fragment_plan_list2, container, false)
 
         mapView = view.findViewById(R.id.mapView) // MapView 바인딩
         mapView.onCreate(savedInstanceState)

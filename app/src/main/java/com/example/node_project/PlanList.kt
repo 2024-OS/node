@@ -46,7 +46,7 @@ class PlanList : Fragment() {
 
     // 새로운 항목 추가
     private fun addNewItem() {
-        val newItem = PlanItem(title = "새 계획", description = "")
+        val newItem = PlanItem(title = "새 계획")
         itemList.add(newItem) // 새 계획 항목을 리스트에 추가
         planListAdapter.notifyItemInserted(itemList.size - 1) // 어댑터에 변경 사항 알림
     }
