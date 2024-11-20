@@ -5,34 +5,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
-class PlanListAdapter(private val planList: MutableList<PlanItem>) :
-    RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
+class PlanListAdapter(private val planList: MutableList<PlanItem>) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanViewHolder {
-        val binding = ItemPlanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PlanViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: PlanViewHolder, position: Int) {
-        val item = planList[position]
-        holder.bind(item)
-    }
-
-    override fun getItemCount(): Int = planList.size
-
+    // ViewHolder class 정의
     inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        // 데이터 바인딩 메소드
         fun bind(item: PlanItem) {
             binding.itemName.setText(item.title)
-            binding.checkBox.isChecked = item.isChecked
+            binding.checkBox.isChecked = item.isChecked // 체크박스 상태 설정
             binding.scoreText.text = item.score.toString() // 점수 표시
 
-            // 체크박스 상태 변경 리스너
+            // 체크박스 리스너 설정
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-                item.isChecked = isChecked
+                item.isChecked = isChecked // 체크 상태 업데이트
             }
 
-            // 하트 버튼 클릭 리스너
+            // 하트 버튼 클릭 리스너 설정
             binding.heartButton.setOnClickListener {
                 item.score += 1 // 점수 증가
                 binding.scoreText.text = item.score.toString() // 점수 업데이트
@@ -40,10 +29,23 @@ class PlanListAdapter(private val planList: MutableList<PlanItem>) :
         }
     }
 
-    // 체크된 항목 가져오기
-    fun getCheckedItems(): List<PlanItem> {
-        return planList.filter { it.isChecked }
+    // ViewHolder 생성
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanViewHolder {
+        val binding = ItemPlanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PlanViewHolder(binding)
     }
+
+    // ViewHolder와 데이터 바인딩
+    override fun onBindViewHolder(holder: PlanViewHolder, position: Int) {
+        val item = planList[position]
+        holder.bind(item) // 바인딩 메소드 호출
+    }
+
+    // 아이템 수 반환
+    override fun getItemCount(): Int = planList.size
+
+    // 체크된 항목 반환
+    fun getCheckedItems(): List<PlanItem> = planList.filter { it.isChecked }
 
     // 항목 추가
     fun addItem(item: PlanItem) {
@@ -60,10 +62,10 @@ class PlanListAdapter(private val planList: MutableList<PlanItem>) :
         }
     }
 
-    // 전체 항목 업데이트
+    // 모든 항목 업데이트
     fun updateAllItems(newItems: List<PlanItem>) {
         planList.clear()
         planList.addAll(newItems)
-        notifyDataSetChanged() // 전체 리스트 갱신
+        notifyDataSetChanged() // 전체 데이터 갱신
     }
 }

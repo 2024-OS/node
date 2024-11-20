@@ -23,25 +23,42 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_plan_list2, container, false)
-
-        mapView = view.findViewById(R.id.mapView) // MapView 바인딩
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this) // OnMapReadyCallback 사용
-
+        setupMapView(view, savedInstanceState) // MapView 초기화
         return view
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        Log.d("Map", "Map is ready")
-        this.googleMap = googleMap
-
-        // 지도 설정 및 마커 추가
-        val location = LatLng(37.7749, -122.4194) // 예시 좌표
-        googleMap.addMarker(MarkerOptions().position(location).title("예시 마커"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+    // MapView 초기화 함수
+    private fun setupMapView(view: View, savedInstanceState: Bundle?) {
+        mapView = view.findViewById(R.id.mapView)
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this) // OnMapReadyCallback 적용
     }
 
-    // 생명주기 메서드
+    override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
+
+        // 지도 설정을 위한 메서드 호출
+        setupMapOptions()
+    }
+
+    // 지도 설정 함수
+    private fun setupMapOptions() {
+        val location = LatLng(37.7749, -122.4194) // 예시 위치
+        addMarkerAtLocation(location, "예시 마커") // 마커 추가
+        moveCameraToLocation(location, 10f) // 카메라 위치 조정
+    }
+
+    // 마커 추가 함수
+    private fun addMarkerAtLocation(location: LatLng, title: String) {
+        googleMap.addMarker(MarkerOptions().position(location).title(title))
+    }
+
+    // 카메라 이동 함수
+    private fun moveCameraToLocation(location: LatLng, zoomLevel: Float) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
+    }
+
+    // 생명주기 메서드 처리
     override fun onResume() {
         super.onResume()
         mapView.onResume()
@@ -64,6 +81,6 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState) // 생명주기 상태 저장
     }
 }
