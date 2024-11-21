@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
 class PlanListAdapter(private val planList: MutableList<PlanItem>) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
-    inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) { // 외부 클래스의 속성에 접근가능
-        // 데이터 바인딩 메소드
+    inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlanItem) {
             binding.itemName.setText(item.title)            // 자동으로 수정 가능 상태로 설정됨
             binding.checkBox.isChecked = item.isChecked     // 체크박스 상태 설정
@@ -25,6 +24,7 @@ class PlanListAdapter(private val planList: MutableList<PlanItem>) : RecyclerVie
             }
         }
     }
+
 
     // ViewHolder 생성
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanViewHolder {
