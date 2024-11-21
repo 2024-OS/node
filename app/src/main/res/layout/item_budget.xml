@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp">
 
-    <!-- 체크박스, 물품, 수량, 가격을 한 줄에 배치 -->
+    <!-- 체크박스와 물품, 수량, 가격 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,28 +21,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Item Name" />
+            android:hint="물품" />
 
         <EditText
             android:id="@+id/itemQuantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:hint="Qty" />
+            android:layout_weight="1"
+            android:hint="수량" />
 
         <EditText
             android:id="@+id/itemPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:hint="Price" />
+            android:layout_weight="1"
+            android:hint="가격" />
     </LinearLayout>
 
-    <!-- 링크 입력란 (물품, 수량, 가격 아래에 위치, 체크리스트 안쪽에 배치) -->
+    <!-- 설명 입력칸 -->
     <EditText
-        android:id="@+id/itemLink"
+        android:id="@+id/itemDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Item Link" />
-
+        android:hint="링크"
+        android:layout_marginStart="48dp"
+    android:layout_marginTop="4dp" />
 </LinearLayout>
