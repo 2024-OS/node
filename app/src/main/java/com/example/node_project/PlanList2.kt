@@ -25,9 +25,12 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
     private lateinit var googleMap: GoogleMap
     private lateinit var placeEditText: EditText // 장소 입력 필드
     private lateinit var searchButton: Button // 검색 버튼
+    private lateinit var addButton: Button // 마커추가 버튼
     private lateinit var deleteButton: Button // 삭제 버튼
     private var markers: MutableMap<String, Marker> = mutableMapOf() // 마커 저장용 맵
     private var selectedMarker: Marker? = null // 선택된 마커
+    private var searchedLocation: LatLng? = null // 검색된 위치
+    private var searchedTitle: String? = null // 검색된 제목
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,13 +42,29 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
 
         // UI 구성 요소 초기화
         placeEditText = view.findViewById(R.id.placeEditText) // EditText
-        searchButton = view.findViewById(R.id.searchButton) // 버튼
+        searchButton = view.findViewById(R.id.searchButton) // 검색 버튼
+        addButton = view.findViewById(R.id.addButton) // 마커추가 버튼
         deleteButton = view.findViewById(R.id.deleteButton) // 삭제 버튼
 
         // 검색 버튼 클릭 리스너 설정
         searchButton.setOnClickListener {
             val query = placeEditText.text.toString()
             searchPlace(query) // 장소 검색 호출
+        }
+
+        // 마커추가 버튼 클릭 리스너 설정
+        addButton.setOnClickListener {
+            searchedLocation?.let { location ->
+                searchedTitle?.let { title ->
+                    addMarkerAtLocation(location, title) // 마커 추가 호출
+                    saveToPreferences(location.latitude, location.longitude, title) // 결과 저장
+                    Toast.makeText(requireContext(), "$title 마커가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    searchedLocation = null // 검색된 위치 초기화
+                    searchedTitle = null // 검색된 제목 초기화
+                }
+            } ?: run {
+                Toast.makeText(requireContext(), "추가할 마커가 없습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 삭제 버튼 클릭 리스너 설정
@@ -88,7 +107,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         moveCameraToLocation(location, 15f) // 카메라 위치 조정
     }
 
-    // 장소 검색 및 마커 추가
+    // 장소 검색
     private fun searchPlace(query: String) {
         val geoCoder = android.location.Geocoder(requireContext(), Locale.getDefault())
         val results = geoCoder.getFromLocationName(query, 1)
@@ -98,11 +117,10 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
             val latitude = location.latitude
             val longitude = location.longitude
 
-            addMarkerAtLocation(LatLng(latitude, longitude), query) // 마커 추가
-            moveCameraToLocation(LatLng(latitude, longitude), 15f) // 카메라 위치 조정
-
-            saveToPreferences(latitude, longitude, query) // 결과 저장
-            Toast.makeText(requireContext(), "$query 저장 완료", Toast.LENGTH_SHORT).show()
+            searchedLocation = LatLng(latitude, longitude) // 검색된 위치 저장
+            searchedTitle = query // 검색된 제목 저장
+            moveCameraToLocation(searchedLocation!!, 15f) // 카메라 위치 조정
+            Toast.makeText(requireContext(), "$query 위치가 검색되었습니다. 마커를 추가하려면 '마커추가' 버튼을 누르세요.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(requireContext(), "장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -114,9 +132,19 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
             val marker = entry.value
             marker.remove() // 지도에서 마커 제거
             markers.remove(entry.key) // 리스트에서 마커 제거
+            removeFromPreferences(title) // 저장된 데이터에서 마커 제거
             Toast.makeText(requireContext(), "$title 마커가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
         } ?: run {
             Toast.makeText(requireContext(), "$title 마커를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 저장된 데이터에서 마커 제거
+    private fun removeFromPreferences(title: String) {
+        val sharedPreferences = requireActivity().getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            remove(title)
+            apply()
         }
     }
 
