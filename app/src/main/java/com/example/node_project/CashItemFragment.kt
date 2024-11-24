@@ -2,6 +2,7 @@ package com.example.node_project
 
 import android.app.Activity
 import android.content.Intent
+import androidx.navigation.Navigation
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -66,7 +67,7 @@ class CashItemFragment : Fragment() {
         val btnComplete = view.findViewById<Button>(R.id.btnComplete)
 
         // 전달받은 데이터 가져오기
-        currentKey = arguments?.getString("key") // 기존 데이터의 키 전달 확인
+        currentKey = arguments?.getString("key") // 고유 키 전달 확인
         Log.d("CashItemFragment", "Received key: $currentKey")
 
         if (!currentKey.isNullOrEmpty()) {
@@ -106,7 +107,7 @@ class CashItemFragment : Fragment() {
                 deleteItemFromFirebase(currentKey!!)
             }
             clearFields()
-            findNavController().navigateUp()
+            Navigation.findNavController(requireView()).popBackStack()
         }
 
         // 이미지 클릭 리스너
@@ -175,12 +176,13 @@ class CashItemFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast(if (currentKey == null) "새 데이터 생성 성공" else "수정 성공")
-                    findNavController().popBackStack()
+                    Navigation.findNavController(requireView()).popBackStack() // 수정된 부분
                 } else {
                     showToast("데이터 저장 실패")
                 }
             }
     }
+
 
     private fun deleteItemFromFirebase(key: String) {
         myRef.child(key).removeValue()
