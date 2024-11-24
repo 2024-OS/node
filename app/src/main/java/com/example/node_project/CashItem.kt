@@ -1,8 +1,9 @@
 package com.example.node_project
 
 data class CashItem(
-    val date: String,
-    val amount: String,
-    val content: String,
-    val imageUri: String?  // 이미지 URI를 추가
+    var date: String = "",        // 날짜
+    var amount: String = "",      // 금액
+    var content: String = "",     // 내용
+    var imageUri: String? = null  // 이미지 URI (nullable)
 )
+
