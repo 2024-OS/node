@@ -1,18 +1,23 @@
 package com.example.node_project
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -120,7 +125,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
             searchedLocation = LatLng(latitude, longitude) // 검색된 위치 저장
             searchedTitle = query // 검색된 제목 저장
             moveCameraToLocation(searchedLocation!!, 15f) // 카메라 위치 조정
-            Toast.makeText(requireContext(), "$query 위치가 검색되었습니다. 마커를 추가하려면 '마커추가' 버튼을 누르세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "$query 위치가 검색되었습니다. '마커추가' 버튼을 누르세요.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(requireContext(), "장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -159,15 +164,27 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
 
     // 마커 추가
     private fun addMarkerAtLocation(location: LatLng, title: String) {
-        val marker = googleMap.addMarker(
-            MarkerOptions()
-                .position(location)
-                .title(title)
-                .snippet(title) // 마커 아래에 장소 이름 추가
-        )
+        val markerOptions = MarkerOptions()
+            .position(location)
+            .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(title)))
+
+        val marker = googleMap.addMarker(markerOptions)
         if (marker != null) {
             markers[title] = marker // 마커를 맵에 저장
         }
+    }
+
+    private fun createCustomMarker(title: String): Bitmap {
+        val markerView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_marker, null)
+        val markerTextView = markerView.findViewById<TextView>(R.id.markerTextView)
+        markerTextView.text = title
+
+        markerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val bitmap = Bitmap.createBitmap(markerView.measuredWidth, markerView.measuredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        markerView.layout(0, 0, markerView.measuredWidth, markerView.measuredHeight)
+        markerView.draw(canvas)
+        return bitmap
     }
 
     // 카메라 이동
