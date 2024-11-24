@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -52,7 +55,7 @@ class CashItemFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
         myRef = database.reference.child("cash_items")
         storage = FirebaseStorage.getInstance()
-        storageReference = storage.reference
+        storageReference = storage.reference // 반드시 초기화
 
         // UI 연결
         etDate = view.findViewById(R.id.etDate)
@@ -62,29 +65,34 @@ class CashItemFragment : Fragment() {
         val btnDelete = view.findViewById<Button>(R.id.btnDelete)
         val btnComplete = view.findViewById<Button>(R.id.btnComplete)
 
-        // 완료 버튼 클릭 시 데이터 저장
+        // 전달받은 날짜 데이터 가져오기
+        val date = arguments?.getString("date") ?: ""
+        etDate.setText(date)
+
+        // 완료 버튼 클릭 리스너 (데이터 확인 없이 저장)
         btnComplete.setOnClickListener {
             val date = etDate.text.toString()
             val amount = etAmount.text.toString()
             val content = etContent.text.toString()
 
-            if (date.isNotEmpty() && imageUri != null) {
+            // 이미지 URI가 있으면 업로드, 없으면 바로 데이터 저장
+            if (imageUri != null) {
                 uploadImageToFirebaseStorage(date, amount, content)
             } else {
-                showToast("모든 항목을 입력해주세요.")
+                saveDataToFirebase(date, amount, content, "") // 이미지 URL 없이 저장
             }
         }
 
-        // 삭제 버튼 클릭 시 초기화
+        // 삭제 버튼 클릭 리스너
         btnDelete.setOnClickListener {
             etDate.text.clear()
             etAmount.text.clear()
             etContent.text.clear()
             ivImage.setImageDrawable(null)
-            findNavController().navigateUp() // 이전 화면으로 돌아가기
+            findNavController().navigateUp()
         }
 
-        // 이미지 클릭 시 갤러리 열기
+        // 이미지 클릭 리스너
         ivImage.setOnClickListener {
             openGallery()
         }
@@ -104,7 +112,7 @@ class CashItemFragment : Fragment() {
         imageRef.putFile(imageUri!!)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveDataToFirebase(date, amount, content, uri.toString()) // 날짜만 저장
+                    saveDataToFirebase(date, amount, content, uri.toString()) // 이미지 URL 포함 저장
                 }
             }
             .addOnFailureListener { exception ->
@@ -112,10 +120,10 @@ class CashItemFragment : Fragment() {
             }
     }
 
-    // Firebase에 데이터 저장
     private fun saveDataToFirebase(date: String, amount: String, content: String, imageUrl: String) {
-        val cashItem = CashItem(date, amount, content, imageUrl) // 금액, 내용은 사용되지 않음
-        myRef.child(date).setValue(cashItem)
+        val sanitizedDate = date.replace(".", "_") // 점을 밑줄로 변환
+        val cashItem = CashItem(date, amount, content, imageUrl) // 입력된 데이터로 객체 생성
+        myRef.child(sanitizedDate).setValue(cashItem) // 데이터 저장
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast("저장 성공")
