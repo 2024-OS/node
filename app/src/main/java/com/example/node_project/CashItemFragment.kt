@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,8 +20,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.bumptech.glide.Glide
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -30,6 +31,7 @@ class CashItemFragment : Fragment() {
     private lateinit var etContent: EditText
     private lateinit var ivImage: ImageView
     private var imageUri: Uri? = null
+    private var originalImageUrl: String = "" // 기존 이미지 URL
 
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
@@ -126,10 +128,10 @@ class CashItemFragment : Fragment() {
         myRef.child(sanitizedDate).setValue(cashItem) // 데이터 저장
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showToast("저장 성공")
-                    findNavController().popBackStack() // 이전 화면으로 돌아가기
+                    showToast("수정 완료")
+                    findNavController().popBackStack()
                 } else {
-                    showToast("저장 실패")
+                    showToast("수정 실패")
                 }
             }
     }
