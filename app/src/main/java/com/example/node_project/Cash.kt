@@ -14,7 +14,7 @@ import com.google.firebase.database.*
 
 class Cash : Fragment() {
     private lateinit var adapter: CashAdapter
-    private val itemList = mutableListOf<String>() // 날짜만 저장할 리스트로 수정
+    private val itemList = mutableListOf<Pair<String, String>>() // (고유 키, 날짜)
 
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
@@ -29,9 +29,9 @@ class Cash : Fragment() {
         myRef = database.reference.child("cash_items")
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        adapter = CashAdapter(itemList, onItemClick = { date ->
+        adapter = CashAdapter(itemList, onItemClick = { key ->
             val bundle = Bundle().apply {
-                putString("date", date) // 선택된 날짜를 전달
+                putString("key", key) // 고유 키 전달
             }
             findNavController().navigate(R.id.action_cash_to_cashItemFragment, bundle)
         })
@@ -39,7 +39,7 @@ class Cash : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        loadDataFromFirebase()  // Firebase에서 데이터 로드
+        loadDataFromFirebase() // Firebase에서 데이터 로드
 
         // + 버튼 클릭 시 CashItemFragment로 이동
         view.findViewById<Button>(R.id.addButton).setOnClickListener {
@@ -52,14 +52,15 @@ class Cash : Fragment() {
     private fun loadDataFromFirebase() {
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                itemList.clear()  // 기존 아이템을 비운 후 새로 추가
+                itemList.clear()
                 for (child in snapshot.children) {
-                    val item = child.getValue(CashItem::class.java)
-                    item?.let {
-                        itemList.add(it.date)  // 날짜만 리스트에 추가
+                    val key = child.key.orEmpty()
+                    val cashItem = child.getValue(CashItem::class.java)
+                    if (cashItem != null) {
+                        itemList.add(Pair(key, cashItem.date))
                     }
                 }
-                adapter.notifyDataSetChanged()  // RecyclerView 갱신
+                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
