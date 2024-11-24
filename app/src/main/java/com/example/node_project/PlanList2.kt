@@ -131,7 +131,12 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
 
     // 마커 추가
     private fun addMarkerAtLocation(location: LatLng, title: String) {
-        val marker = googleMap.addMarker(MarkerOptions().position(location).title(title))
+        val marker = googleMap.addMarker(
+            MarkerOptions()
+                .position(location)
+                .title(title)
+                .snippet(title) // 마커 아래에 장소 이름 추가
+        )
         if (marker != null) {
             markers[title] = marker // 마커를 맵에 저장
         }
