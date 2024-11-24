@@ -38,15 +38,14 @@
         <!-- 장소선정에서 지도 Fragment로 이동하는 액션 추가 -->
         <action
             android:id="@+id/action_planList_to_mapFrag"
-            app:destination="@id/fragment_plan_list2" />
+            app:destination="@id/PlanList2" />
     </fragment>
 
     <!-- 지도 Fragment (fragment_plan_list2) -->
     <fragment
-        android:id="@+id/fragment_plan_list2"
-        android:name="com.example.node_project.MapFragment"
-        android:label="지도"
-        tools:layout="@layout/fragment_plan_list2" />
+        android:id="@+id/PlanList2"
+        android:name="com.example.node_project.PlanList2"
+        android:label="지도" />
 
     <!-- 회계내역 Fragment -->
     <fragment

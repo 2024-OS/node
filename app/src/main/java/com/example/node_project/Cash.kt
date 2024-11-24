@@ -31,10 +31,11 @@ class Cash : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         adapter = CashAdapter(itemList, onItemClick = { date ->
             val bundle = Bundle().apply {
-                putString("date", date)
+                putString("date", date) // 선택된 날짜를 전달
             }
             findNavController().navigate(R.id.action_cash_to_cashItemFragment, bundle)
         })
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
