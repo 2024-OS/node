@@ -39,14 +39,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img" />
 
-    <fragment
+    <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="410dp"
         android:layout_height="592dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:context=".MapsActivity" />
+        android:contentDescription="지도 보기"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
