@@ -29,6 +29,7 @@ class CashItemFragment : Fragment() {
     private lateinit var ivImage: ImageView
     private var imageUri: Uri? = null
     private var originalImageUrl: String = "" // 기존 이미지 URL
+    private var currentKey: String? = null   // 기존 데이터의 고유 키
 
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
@@ -65,9 +66,14 @@ class CashItemFragment : Fragment() {
         val btnComplete = view.findViewById<Button>(R.id.btnComplete)
 
         // 전달받은 데이터 가져오기
-        val date = arguments?.getString("date") ?: ""
-        if (date.isNotEmpty()) {
-            loadItemFromFirebase(date)
+        currentKey = arguments?.getString("key") // 기존 데이터의 키 전달 확인
+        Log.d("CashItemFragment", "Received key: $currentKey")
+
+        if (!currentKey.isNullOrEmpty()) {
+            loadItemFromFirebase(currentKey!!)
+        } else {
+            Log.d("CashItemFragment", "Key is null, entering new data mode.")
+            clearFields()
         }
 
         // 완료 버튼 클릭 리스너
@@ -76,19 +82,30 @@ class CashItemFragment : Fragment() {
             val amount = etAmount.text.toString()
             val content = etContent.text.toString()
 
-            if (imageUri != null) {
-                uploadImageToFirebaseStorage(newDate, amount, content, date)
+            if (currentKey.isNullOrEmpty()) {
+                // 새로운 데이터 생성
+                val uniqueKey = System.currentTimeMillis().toString() // 고유 키 생성
+                if (imageUri != null) {
+                    uploadImageToFirebaseStorage(newDate, amount, content, uniqueKey)
+                } else {
+                    saveDataToFirebase(newDate, amount, content, "", uniqueKey)
+                }
             } else {
-                saveDataToFirebase(newDate, amount, content, originalImageUrl, date)
+                // 기존 데이터 수정
+                if (imageUri != null) {
+                    uploadImageToFirebaseStorage(newDate, amount, content, currentKey!!)
+                } else {
+                    saveDataToFirebase(newDate, amount, content, originalImageUrl, currentKey!!)
+                }
             }
         }
 
         // 삭제 버튼 클릭 리스너
         btnDelete.setOnClickListener {
-            etDate.text.clear()
-            etAmount.text.clear()
-            etContent.text.clear()
-            ivImage.setImageDrawable(null)
+            if (!currentKey.isNullOrEmpty()) {
+                deleteItemFromFirebase(currentKey!!)
+            }
+            clearFields()
             findNavController().navigateUp()
         }
 
@@ -100,51 +117,51 @@ class CashItemFragment : Fragment() {
         return view
     }
 
-    // Firebase에서 데이터 로드
-    private fun loadItemFromFirebase(date: String) {
-        val sanitizedDate = date.replace(".", "_")
-        myRef.child(sanitizedDate).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val cashItem = snapshot.getValue(CashItem::class.java)
-                if (cashItem != null) {
-                    etDate.setText(cashItem.date)
-                    etAmount.setText(cashItem.amount)
-                    etContent.setText(cashItem.content)
-                    originalImageUrl = cashItem.imageUrl
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        openGalleryForResult.launch(intent)
+    }
 
-                    // 이미지 URL이 있으면 로드
-                    if (cashItem.imageUrl.isNotEmpty()) {
-                        Glide.with(requireContext()).load(cashItem.imageUrl).into(ivImage)
+    private fun loadItemFromFirebase(key: String) {
+        Log.d("CashItemFragment", "Loading data for key: $key")
+        myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val cashItem = snapshot.getValue(CashItem::class.java)
+                    if (cashItem != null) {
+                        etDate.setText(cashItem.date)
+                        etAmount.setText(cashItem.amount)
+                        etContent.setText(cashItem.content)
+                        originalImageUrl = cashItem.imageUrl
+
+                        // 이미지 로드
+                        if (cashItem.imageUrl.isNotEmpty()) {
+                            Glide.with(requireContext()).load(cashItem.imageUrl).into(ivImage)
+                        } else {
+                            ivImage.setImageResource(R.drawable.picture) // 기본 이미지
+                        }
+                        Log.d("CashItemFragment", "Data loaded successfully.")
+                    } else {
+                        Log.d("CashItemFragment", "Data is null for key: $key")
                     }
+                } else {
+                    Log.d("CashItemFragment", "No snapshot found for key: $key")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                Log.e("CashItemFragment", "Firebase error: ${error.message}")
                 showToast("데이터 로드 실패: ${error.message}")
             }
         })
     }
 
-    // Firebase Storage에 이미지 업로드
-    private fun uploadImageToFirebaseStorage(date: String, amount: String, content: String, oldDate: String) {
-        if (originalImageUrl.isNotEmpty()) {
-            // 기존 이미지 삭제
-            val oldImageRef = storage.getReferenceFromUrl(originalImageUrl)
-            oldImageRef.delete()
-                .addOnSuccessListener {
-                    Log.d("CashItemFragment", "기존 이미지 삭제 성공")
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("CashItemFragment", "기존 이미지 삭제 실패: ${exception.message}")
-                }
-        }
-
-        // 새 이미지 업로드
+    private fun uploadImageToFirebaseStorage(date: String, amount: String, content: String, key: String) {
         val imageRef = storageReference.child("images/${System.currentTimeMillis()}.jpg")
         imageRef.putFile(imageUri!!)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveDataToFirebase(date, amount, content, uri.toString(), oldDate)
+                    saveDataToFirebase(date, amount, content, uri.toString(), key)
                 }
             }
             .addOnFailureListener { exception ->
@@ -152,38 +169,43 @@ class CashItemFragment : Fragment() {
             }
     }
 
-
-
-    private fun saveDataToFirebase(newDate: String, amount: String, content: String, imageUrl: String, oldDate: String) {
-        val sanitizedOldDate = oldDate.replace(".", "_")
-        val sanitizedNewDate = newDate.replace(".", "_")
-
-        // 기존 데이터 삭제 후 새 데이터 저장
-        if (sanitizedOldDate != sanitizedNewDate) {
-            myRef.child(sanitizedOldDate).removeValue()
-        }
-
-        val cashItem = CashItem(newDate, amount, content, imageUrl)
-        myRef.child(sanitizedNewDate).setValue(cashItem)
+    private fun saveDataToFirebase(date: String, amount: String, content: String, imageUrl: String, key: String) {
+        val cashItem = CashItem(date, amount, content, imageUrl)
+        myRef.child(key).setValue(cashItem)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showToast("수정 완료")
+                    showToast(if (currentKey == null) "새 데이터 생성 성공" else "수정 성공")
                     findNavController().popBackStack()
                 } else {
-                    showToast("수정 실패")
+                    showToast("데이터 저장 실패")
                 }
             }
     }
 
-    // 이미지 선택을 위한 openGallery 함수 추가
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        openGalleryForResult.launch(intent)
+    private fun deleteItemFromFirebase(key: String) {
+        myRef.child(key).removeValue()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    showToast("데이터 삭제 성공")
+                } else {
+                    showToast("데이터 삭제 실패")
+                }
+            }
     }
 
+    private fun clearFields() {
+        etDate.text.clear()
+        etAmount.text.clear()
+        etContent.text.clear()
+        ivImage.setImageResource(R.drawable.picture) // 기본 이미지 설정
+        imageUri = null
+        originalImageUrl = ""
+        currentKey = null
+    }
 
-    // Toast 메시지 표시
     private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+        } ?: Log.w("CashItemFragment", "Context is null, unable to show toast: $message")
     }
 }
