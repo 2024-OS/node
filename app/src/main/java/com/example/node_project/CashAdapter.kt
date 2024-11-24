@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class CashAdapter(
-    private val itemList: List<Pair<String, String>>, // (고유 키, 날짜)
-    private val onItemClick: (String) -> Unit
+    private val itemList: List<Pair<String, String>>, // 날짜와 키를 저장
+    private val onItemClick: (Pair<String, String>) -> Unit
 ) : RecyclerView.Adapter<CashAdapter.CashViewHolder>() {
 
     inner class CashViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -16,21 +16,21 @@ class CashAdapter(
 
         init {
             itemView.setOnClickListener {
-                val key = itemList[adapterPosition].first // 고유 키 전달
-                onItemClick(key)
+                val item = itemList[adapterPosition] // 클릭된 날짜와 키를 가져옴
+                onItemClick(item) // 클릭 시 onItemClick 호출
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CashViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_cash, parent, false)
+            .inflate(R.layout.item_cash, parent, false) // 날짜를 보여줄 뷰 레이아웃
         return CashViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CashViewHolder, position: Int) {
-        val currentItem = itemList[position]
-        holder.dateTextView.text = currentItem.second // 날짜 표시
+        val (date, _) = itemList[position] // 날짜만 표시
+        holder.dateTextView.text = date
     }
 
     override fun getItemCount(): Int = itemList.size

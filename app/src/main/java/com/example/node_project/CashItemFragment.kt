@@ -158,6 +158,19 @@ class CashItemFragment : Fragment() {
     }
 
     private fun uploadImageToFirebaseStorage(date: String, amount: String, content: String, key: String) {
+        // 기존 이미지 삭제
+        if (originalImageUrl.isNotEmpty()) {
+            val oldImageRef = storage.getReferenceFromUrl(originalImageUrl)
+            oldImageRef.delete()
+                .addOnSuccessListener {
+                    Log.d("CashItemFragment", "기존 이미지 삭제 성공: $originalImageUrl")
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("CashItemFragment", "기존 이미지 삭제 실패: ${exception.message}")
+                }
+        }
+
+        // 새 이미지 업로드
         val imageRef = storageReference.child("images/${System.currentTimeMillis()}.jpg")
         imageRef.putFile(imageUri!!)
             .addOnSuccessListener {
@@ -170,13 +183,20 @@ class CashItemFragment : Fragment() {
             }
     }
 
+
     private fun saveDataToFirebase(date: String, amount: String, content: String, imageUrl: String, key: String) {
         val cashItem = CashItem(date, amount, content, imageUrl)
         myRef.child(key).setValue(cashItem)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast(if (currentKey == null) "새 데이터 생성 성공" else "수정 성공")
-                    Navigation.findNavController(requireView()).popBackStack() // 수정된 부분
+
+                    // Navigation 동작을 안전하게 처리
+                    if (isAdded && view != null) { // Fragment가 활성 상태인지 확인
+                        findNavController().popBackStack()
+                    } else {
+                        Log.w("CashItemFragment", "Fragment not attached to UI; skipping navigation.")
+                    }
                 } else {
                     showToast("데이터 저장 실패")
                 }
@@ -184,16 +204,40 @@ class CashItemFragment : Fragment() {
     }
 
 
+
     private fun deleteItemFromFirebase(key: String) {
-        myRef.child(key).removeValue()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    showToast("데이터 삭제 성공")
-                } else {
-                    showToast("데이터 삭제 실패")
+        myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val cashItem = snapshot.getValue(CashItem::class.java)
+                if (cashItem != null && cashItem.imageUrl.isNotEmpty()) {
+                    // Firebase Storage에서 이미지 삭제
+                    val imageRef = storage.getReferenceFromUrl(cashItem.imageUrl)
+                    imageRef.delete()
+                        .addOnSuccessListener {
+                            Log.d("CashItemFragment", "이미지 삭제 성공: ${cashItem.imageUrl}")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("CashItemFragment", "이미지 삭제 실패: ${exception.message}")
+                        }
                 }
+
+                // Realtime Database에서 데이터 삭제
+                myRef.child(key).removeValue()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            showToast("데이터 및 이미지 삭제 성공")
+                        } else {
+                            showToast("데이터 삭제 실패")
+                        }
+                    }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("CashItemFragment", "Firebase Realtime Database 삭제 실패: ${error.message}")
+            }
+        })
     }
+
 
     private fun clearFields() {
         etDate.text.clear()
