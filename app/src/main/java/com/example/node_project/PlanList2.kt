@@ -166,6 +166,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
     private fun addMarkerAtLocation(location: LatLng, title: String) {
         val markerOptions = MarkerOptions()
             .position(location)
+            .title(title) // 제목 설정
             .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(title)))
 
         val marker = googleMap.addMarker(markerOptions)
@@ -208,6 +209,8 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
             }
         }
     }
+
+
 
     // 생명주기 메서드 처리
     override fun onResume() {
