@@ -12,13 +12,13 @@
         android:id="@+id/mapButton"
         android:layout_width="72dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="109dp"
         android:layout_marginEnd="4dp"
         android:backgroundTint="#B28FF0"
         android:text="지도"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/addButtonPlan"
-        app:layout_constraintTop_toBottomOf="@+id/topImage2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title2"
@@ -84,12 +84,12 @@
         android:id="@+id/rec_plan"
         android:layout_width="368dp"
         android:layout_height="560dp"
+        android:layout_marginBottom="16dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapButton"
-        app:layout_constraintVertical_bias="0.17" />
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/topImage2"
@@ -99,7 +99,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="170dp"
         android:layout_marginTop="33dp"
-        app:layout_constraintBottom_toTopOf="@+id/mapButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img" />

@@ -7,27 +7,6 @@
     android:background="@color/material_dynamic_primary90"
     android:backgroundTint="#E0F7FA">
 
-    <TextView
-        android:id="@+id/title3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="지도"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
-
-    <View
-        android:id="@+id/titleUnderline2"
-        android:layout_width="372dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="1dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title3" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="68dp"
@@ -39,13 +18,39 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img" />
 
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#B9ED83"
+        android:text="검색"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="410dp"
-        android:layout_height="592dp"
+        android:layout_width="409dp"
+        android:layout_height="591dp"
+        android:layout_marginBottom="4dp"
+        android:contentDescription="지도 보기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/placeEditText"
+        android:layout_width="285dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="장소 검색"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="지도 보기"/>
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
