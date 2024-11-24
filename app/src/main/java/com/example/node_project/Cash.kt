@@ -14,7 +14,7 @@ import com.google.firebase.database.*
 
 class Cash : Fragment() {
     private lateinit var adapter: CashAdapter
-    private val itemList = mutableListOf<Pair<String, String>>() // (고유 키, 날짜)
+    private val itemList = mutableListOf<Pair<String, String>>() // 날짜와 키를 함께 저장
 
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
@@ -29,9 +29,11 @@ class Cash : Fragment() {
         myRef = database.reference.child("cash_items")
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        adapter = CashAdapter(itemList, onItemClick = { key ->
+        adapter = CashAdapter(itemList, onItemClick = { pair ->
+            val (date, key) = pair
             val bundle = Bundle().apply {
-                putString("key", key) // 고유 키 전달
+                putString("date", date) // 선택된 날짜 전달
+                putString("key", key)  // 해당 항목의 고유 키 전달
             }
             findNavController().navigate(R.id.action_cash_to_cashItemFragment, bundle)
         })
@@ -50,22 +52,23 @@ class Cash : Fragment() {
     }
 
     private fun loadDataFromFirebase() {
-        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                itemList.clear()
-                for (child in snapshot.children) {
-                    val key = child.key.orEmpty()
-                    val cashItem = child.getValue(CashItem::class.java)
-                    if (cashItem != null) {
-                        itemList.add(Pair(key, cashItem.date))
+        myRef.orderByChild("date") // "date" 필드를 기준으로 정렬
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    itemList.clear() // 기존 아이템을 비운 후 새로 추가
+                    for (child in snapshot.children) {
+                        val item = child.getValue(CashItem::class.java)
+                        val key = child.key
+                        if (item != null && key != null) {
+                            itemList.add(Pair(item.date, key)) // 날짜와 키를 함께 저장
+                        }
                     }
+                    adapter.notifyDataSetChanged() // RecyclerView 갱신
                 }
-                adapter.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(requireContext(), "데이터 로드 실패: ${error.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "데이터 로드 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }
