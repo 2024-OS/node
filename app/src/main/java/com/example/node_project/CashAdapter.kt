@@ -7,32 +7,30 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class CashAdapter(
-    private val itemList: List<CashItem>,
-    private val onItemClick: (CashItem) -> Unit
+    private val itemList: List<String>, // 이제 리스트는 날짜만 저장
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<CashAdapter.CashViewHolder>() {
 
     inner class CashViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
+
         init {
             itemView.setOnClickListener {
-                val item = itemList[adapterPosition]  // adapterPosition 사용
+                val item = itemList[adapterPosition]  // 클릭된 날짜를 가져옴
                 onItemClick(item)  // 클릭 시 onItemClick 호출
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CashViewHolder {
-        // 텍스트 뷰를 동적으로 생성
-        val textView = TextView(parent.context).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            textSize = 16f
-            setPadding(16, 16, 16, 16)
-        }
-        return CashViewHolder(textView)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_cash, parent, false) // 날짜를 보여줄 뷰 레이아웃
+        return CashViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CashViewHolder, position: Int) {
         val currentItem = itemList[position]
-        (holder.itemView as TextView).text = currentItem.date  // 예시로 날짜만 표시
+        holder.dateTextView.text = currentItem  // 날짜만 표시
     }
 
     override fun getItemCount(): Int = itemList.size

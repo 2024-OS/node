@@ -8,14 +8,11 @@
     android:padding="20dp"
     tools:context=".Cash">
 
-    <!-- 상단 이미지 -->
 
-    <!-- 제목 텍스트 -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topImage"
         android:layout_marginStart="12dp"
         android:layout_marginTop="100dp"
         android:text="2024 회계내역"
@@ -31,7 +28,6 @@
         android:background="#000000"
         android:layout_marginTop="8dp" />
 
-    <!-- RecyclerView 영역 (날짜 목록만 표시됨) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -59,7 +55,6 @@
         android:id="@+id/topImage3"
         android:layout_width="68dp"
         android:layout_height="56dp"
-        android:layout_alignBottom="@+id/topImage"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="150dp"

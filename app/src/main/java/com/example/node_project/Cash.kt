@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.database.*
 
 class Cash : Fragment() {
-
     private lateinit var adapter: CashAdapter
-    private val itemList = mutableListOf<CashItem>()
+    private val itemList = mutableListOf<String>() // 날짜만 저장할 리스트로 수정
+
+    private lateinit var database: FirebaseDatabase
+    private lateinit var myRef: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,47 +25,45 @@ class Cash : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cash, container, false)
 
-        // RecyclerView 설정
+        database = FirebaseDatabase.getInstance()
+        myRef = database.reference.child("cash_items")
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        adapter = CashAdapter(itemList) { cashItem ->
-            // 클릭 시 행동
+        adapter = CashAdapter(itemList, onItemClick = { date ->
             val bundle = Bundle().apply {
-                putString("date", cashItem.date)
-                putString("amount", cashItem.amount)
-                putString("content", cashItem.content)
-                putString("imageUri", cashItem.imageUri) // 이미지 URI도 함께 전달
+                putString("date", date)
             }
             findNavController().navigate(R.id.action_cash_to_cashItemFragment, bundle)
-        }
-
+        })
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        // + 버튼 클릭 리스너
-        val addButton = view.findViewById<Button>(R.id.addButton)
-        addButton.setOnClickListener {
-            // 버튼 클릭 시 CashItemFragment로 이동
+        loadDataFromFirebase()  // Firebase에서 데이터 로드
+
+        // + 버튼 클릭 시 CashItemFragment로 이동
+        view.findViewById<Button>(R.id.addButton).setOnClickListener {
             findNavController().navigate(R.id.action_cash_to_cashItemFragment)
-        }
-
-        // 결과 받기 (Fragment 간 데이터 전송)
-        parentFragmentManager.setFragmentResultListener("requestKey", viewLifecycleOwner) { _, bundle ->
-            val date = bundle.getString("date")
-            val amount = bundle.getString("amount")
-            val content = bundle.getString("content")
-            val imageUri = bundle.getString("imageUri") // 이미지 URI도 받기
-
-            // 값이 있으면 아이템 추가
-            if (!date.isNullOrEmpty()) {
-                addItem(CashItem(date, amount ?: "", content ?: "", imageUri))  // 이미지 URI 포함하여 아이템 추가
-            }
         }
 
         return view
     }
 
-    private fun addItem(item: CashItem) {
-        itemList.add(item)
-        adapter.notifyDataSetChanged()  // RecyclerView 업데이트
+    private fun loadDataFromFirebase() {
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                itemList.clear()  // 기존 아이템을 비운 후 새로 추가
+                for (child in snapshot.children) {
+                    val item = child.getValue(CashItem::class.java)
+                    item?.let {
+                        itemList.add(it.date)  // 날짜만 리스트에 추가
+                    }
+                }
+                adapter.notifyDataSetChanged()  // RecyclerView 갱신
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(requireContext(), "데이터 로드 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
