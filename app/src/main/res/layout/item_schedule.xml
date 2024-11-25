@@ -4,17 +4,19 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- 체크박스 -->
     <CheckBox
         android:id="@+id/taskCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- 할일 입력 EditText -->
     <EditText
         android:id="@+id/taskTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="Task"
+        android:hint="할일을 입력하세요"
         android:background="@android:color/transparent"
         android:inputType="text" />
 </LinearLayout>
