@@ -7,6 +7,18 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
+    <Button
+        android:id="@+id/mapButton2"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#B28FF0"
+        android:text="지도"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/heartButton"
+        app:layout_constraintStart_toEndOf="@+id/itemName"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
@@ -18,7 +30,7 @@
         android:id="@+id/itemName"
         android:layout_width="127dp"
         android:layout_height="48dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:hint="Item Name"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="parent" />
