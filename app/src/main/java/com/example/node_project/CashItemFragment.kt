@@ -36,7 +36,7 @@ class CashItemFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
 
-    // 갤러리에서 이미지를 선택하기 위한 ActivityResultLauncher
+    // 갤러리에서 이미지를 선택하게 하기
     private val openGalleryForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
@@ -124,16 +124,16 @@ class CashItemFragment : Fragment() {
         myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val cashItem = snapshot.getValue(CashItem::class.java)
-                    if (cashItem != null) {
-                        etDate.setText(cashItem.date)
-                        etAmount.setText(cashItem.amount)
-                        etContent.setText(cashItem.content)
-                        originalImageUrl = cashItem.imageUrl
+                    val cashModel = snapshot.getValue(CashModel::class.java)
+                    if (cashModel != null) {
+                        etDate.setText(cashModel.date)
+                        etAmount.setText(cashModel.amount)
+                        etContent.setText(cashModel.content)
+                        originalImageUrl = cashModel.imageUrl
 
                         // 이미지 로드
-                        if (cashItem.imageUrl.isNotEmpty()) {
-                            Glide.with(requireContext()).load(cashItem.imageUrl).into(ivImage)
+                        if (cashModel.imageUrl.isNotEmpty()) {
+                            Glide.with(requireContext()).load(cashModel.imageUrl).into(ivImage)
                         } else {
                             ivImage.setImageResource(R.drawable.picture) // 기본 이미지
                         }
@@ -170,8 +170,8 @@ class CashItemFragment : Fragment() {
     }
 
     private fun saveDataToFirebase(date: String, amount: String, content: String, imageUrl: String, key: String) {
-        val cashItem = CashItem(date, amount, content, imageUrl)
-        myRef.child(key).setValue(cashItem)
+        val cashModel = CashModel(date, amount, content, imageUrl)
+        myRef.child(key).setValue(cashModel)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast(if (currentKey == null) "새 데이터 생성 성공" else "수정 성공")
@@ -187,10 +187,10 @@ class CashItemFragment : Fragment() {
     private fun deleteItemFromFirebase(key: String) {
         myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val cashItem = snapshot.getValue(CashItem::class.java)
-                if (cashItem != null && cashItem.imageUrl.isNotEmpty()) {
+                val cashModel = snapshot.getValue(CashModel::class.java)
+                if (cashModel != null && cashModel.imageUrl.isNotEmpty()) {
                     // Firebase Storage에서 이미지 삭제
-                    val imageRef = storage.getReferenceFromUrl(cashItem.imageUrl)
+                    val imageRef = storage.getReferenceFromUrl(cashModel.imageUrl)
                     imageRef.delete()
                 }
 
