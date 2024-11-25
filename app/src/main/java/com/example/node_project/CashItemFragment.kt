@@ -6,7 +6,6 @@ import androidx.navigation.Navigation
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,12 +67,10 @@ class CashItemFragment : Fragment() {
 
         // 전달받은 데이터 가져오기
         currentKey = arguments?.getString("key") // 고유 키 전달 확인
-        Log.d("CashItemFragment", "Received key: $currentKey")
 
         if (!currentKey.isNullOrEmpty()) {
             loadItemFromFirebase(currentKey!!)
         } else {
-            Log.d("CashItemFragment", "Key is null, entering new data mode.")
             clearFields()
         }
 
@@ -124,7 +121,6 @@ class CashItemFragment : Fragment() {
     }
 
     private fun loadItemFromFirebase(key: String) {
-        Log.d("CashItemFragment", "Loading data for key: $key")
         myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -141,17 +137,11 @@ class CashItemFragment : Fragment() {
                         } else {
                             ivImage.setImageResource(R.drawable.picture) // 기본 이미지
                         }
-                        Log.d("CashItemFragment", "Data loaded successfully.")
-                    } else {
-                        Log.d("CashItemFragment", "Data is null for key: $key")
                     }
-                } else {
-                    Log.d("CashItemFragment", "No snapshot found for key: $key")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("CashItemFragment", "Firebase error: ${error.message}")
                 showToast("데이터 로드 실패: ${error.message}")
             }
         })
@@ -162,12 +152,8 @@ class CashItemFragment : Fragment() {
         if (originalImageUrl.isNotEmpty()) {
             val oldImageRef = storage.getReferenceFromUrl(originalImageUrl)
             oldImageRef.delete()
-                .addOnSuccessListener {
-                    Log.d("CashItemFragment", "기존 이미지 삭제 성공: $originalImageUrl")
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("CashItemFragment", "기존 이미지 삭제 실패: ${exception.message}")
-                }
+                .addOnSuccessListener {}
+                .addOnFailureListener {}
         }
 
         // 새 이미지 업로드
@@ -183,27 +169,20 @@ class CashItemFragment : Fragment() {
             }
     }
 
-
     private fun saveDataToFirebase(date: String, amount: String, content: String, imageUrl: String, key: String) {
         val cashItem = CashItem(date, amount, content, imageUrl)
         myRef.child(key).setValue(cashItem)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast(if (currentKey == null) "새 데이터 생성 성공" else "수정 성공")
-
-                    // Navigation 동작을 안전하게 처리
                     if (isAdded && view != null) { // Fragment가 활성 상태인지 확인
                         findNavController().popBackStack()
-                    } else {
-                        Log.w("CashItemFragment", "Fragment not attached to UI; skipping navigation.")
                     }
                 } else {
                     showToast("데이터 저장 실패")
                 }
             }
     }
-
-
 
     private fun deleteItemFromFirebase(key: String) {
         myRef.child(key).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -213,12 +192,6 @@ class CashItemFragment : Fragment() {
                     // Firebase Storage에서 이미지 삭제
                     val imageRef = storage.getReferenceFromUrl(cashItem.imageUrl)
                     imageRef.delete()
-                        .addOnSuccessListener {
-                            Log.d("CashItemFragment", "이미지 삭제 성공: ${cashItem.imageUrl}")
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.e("CashItemFragment", "이미지 삭제 실패: ${exception.message}")
-                        }
                 }
 
                 // Realtime Database에서 데이터 삭제
@@ -232,12 +205,9 @@ class CashItemFragment : Fragment() {
                     }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("CashItemFragment", "Firebase Realtime Database 삭제 실패: ${error.message}")
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
-
 
     private fun clearFields() {
         etDate.text.clear()
@@ -252,6 +222,6 @@ class CashItemFragment : Fragment() {
     private fun showToast(message: String) {
         context?.let {
             Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
-        } ?: Log.w("CashItemFragment", "Context is null, unable to show toast: $message")
+        }
     }
 }
