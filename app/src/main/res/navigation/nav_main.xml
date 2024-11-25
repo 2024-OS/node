@@ -5,7 +5,8 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/fragment_calender">
 
-    <!-- 캘린더 Fragment (초기 화면) -->
+
+    <!-- 캘린더(홈 화면) -->
     <fragment
         android:id="@+id/fragment_calender"
         android:name="com.example.node_project.CalendarFragment"
@@ -28,53 +29,61 @@
             app:destination="@id/budget" />
     </fragment>
 
-    <!-- 장소선정 Fragment -->
+
+    <!-- 장소선정 -->
     <fragment
         android:id="@+id/planList"
         android:name="com.example.node_project.PlanList"
         android:label="장소선정"
         tools:layout="@layout/fragment_plan_list">
 
-        <!-- 장소선정에서 지도 Fragment로 이동하는 액션 추가 -->
+        <!-- 장소선정에서 지도로 이동 -->
         <action
             android:id="@+id/action_planList_to_mapFrag"
             app:destination="@id/PlanList2" />
     </fragment>
 
-    <!-- 지도 Fragment (fragment_plan_list2) -->
+
+    <!-- 지도 -->
     <fragment
         android:id="@+id/PlanList2"
         android:name="com.example.node_project.PlanList2"
         android:label="지도" />
 
-    <!-- 회계내역 Fragment -->
+
+    <!-- 회계내역 -->
     <fragment
         android:id="@+id/cash"
         android:name="com.example.node_project.Cash"
         android:label="회계내역"
         tools:layout="@layout/fragment_cash">
 
+        <!-- 회계내역에서 수정 및 추가 화면으로 이동 -->
         <action
             android:id="@+id/action_cash_to_cashItemFragment"
             app:destination="@id/cashItemFragment" />
     </fragment>
 
-    <!-- CashItemFragment -->
+
+    <!-- 회계내역 수정 및 추가 화면 -->
     <fragment
         android:id="@+id/cashItemFragment"
         android:name="com.example.node_project.CashItemFragment"
         android:label="Cash Item"
         tools:layout="@layout/fragment_cash_item">
 
+        <!-- 회계내역 수정 및 추가 화면에서 회계내역으로 이동 -->
         <action
             android:id="@+id/action_cashItemFragment_to_cash"
             app:destination="@id/cash" />
     </fragment>
 
-    <!-- 예산안 Fragment -->
+
+    <!-- 예산안 -->
     <fragment
         android:id="@+id/budget"
         android:name="com.example.node_project.BudgetFragment"
         android:label="예산안"
         tools:layout="@layout/fragment_budget" />
+
 </navigation>

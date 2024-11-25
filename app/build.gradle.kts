@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.node_project"
-    compileSdk = 34
+    compileSdk = 34 // SDK 버전
 
     defaultConfig {
         applicationId = "com.example.node_project"
@@ -45,18 +45,20 @@ android {
 }
 
 dependencies {
+    // firebase BOM 사용 -> 라이브러리 버전 관리
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-database-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-database-ktx") // Realtime Database
+    implementation("com.google.firebase:firebase-storage-ktx") // Storage
 
     // 지도
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0") // Google Maps
+    implementation("com.google.android.gms:play-services-location:21.3.0") // 위치
 
-    // Glide 라이브러리 추가
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    kapt("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("com.google.android.material:material:1.12.0") // Design
+
+    // Glide 이미지 라이브러리
+    implementation("com.github.bumptech.glide:glide:4.12.0") // Glide
+    kapt("com.github.bumptech.glide:compiler:4.12.0") // kapt 컴파일러
 
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.ktx)
