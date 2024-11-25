@@ -4,95 +4,99 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
-import android.widget.TextView
-import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.node_project.models.ScheduleItem
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.node_project.databinding.FragmentCalenderBinding
+import com.example.node_project.viewmodel.CalendarViewModel
 
 class CalendarFragment : Fragment() {
 
-    private lateinit var calendarView: CalendarView
-    private lateinit var scheduleRecyclerView: RecyclerView
-    private lateinit var scheduleTitle: TextView
-    private lateinit var addButton: Button
-    private lateinit var deleteButton: Button
-    private lateinit var adapter: ScheduleAdapter
+    private val viewModel: CalendarViewModel by viewModels()
+    private var _binding: FragmentCalenderBinding? = null
+    private val binding get() = _binding!!
 
-    private val scheduleData = mutableMapOf<String, MutableList<ScheduleItem>>()
-    private var selectedDate: String = getTodayDate()
+    private lateinit var adapter: ScheduleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_calender, container, false)
+    ): View {
+        _binding = FragmentCalenderBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
 
-        // View 초기화
-        calendarView = view.findViewById(R.id.calendarView)
-        scheduleRecyclerView = view.findViewById(R.id.scheduleRecyclerView)
-        scheduleTitle = view.findViewById(R.id.scheduleTitle)
-        addButton = view.findViewById(R.id.button3)
-        deleteButton = view.findViewById(R.id.button4)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupCalendarView()
-        setupButtons()
+        observeViewModel()
 
-        return view
+        // 캘린더 날짜 선택 이벤트
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val date = "${year}년 ${month + 1}월 ${dayOfMonth}일"
+            viewModel.setDate(date) // 선택된 날짜를 ViewModel에 전달
+        }
+
+        // 추가 버튼 클릭 이벤트
+        binding.button3.setOnClickListener {
+            viewModel.addTask("새 작업")
+        }
+
+        // 삭제 버튼 클릭 이벤트
+        binding.button4.setOnClickListener {
+            viewModel.removeCheckedTasks()
+        }
     }
 
     private fun setupRecyclerView() {
-        adapter = ScheduleAdapter(scheduleData[selectedDate] ?: mutableListOf()) { position, isChecked ->
-            // Handle checkbox changes
-        }
-        scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        scheduleRecyclerView.adapter = adapter
-    }
-
-    private fun setupCalendarView() {
-        // 초기 선택 날짜 설정
-        scheduleTitle.text = selectedDate
-
-        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            // 날짜 변경 시 '의 할일' 추가
-            val newDate = "$year-${month + 1}-$dayOfMonth"
-            selectedDate = "$newDate 의 할일"
-            scheduleTitle.text = selectedDate
-            updateScheduleList()
-        }
-    }
-
-    private fun setupButtons() {
-        addButton.setOnClickListener {
-            val currentList = scheduleData.getOrPut(selectedDate) { mutableListOf() }
-            currentList.add(ScheduleItem("새 작업"))
-            updateScheduleList()
-        }
-
-        deleteButton.setOnClickListener {
-            val currentList = scheduleData[selectedDate] ?: return@setOnClickListener
-            val iterator = currentList.iterator()
-            while (iterator.hasNext()) {
-                if (iterator.next().isChecked) iterator.remove()
+        // RecyclerView 어댑터 초기화 및 콜백 전달
+        adapter = ScheduleAdapter(
+            viewModel.getTasksForSelectedDate(),
+            { position, isChecked ->
+                viewModel.updateTaskCheckedState(position, isChecked) // 체크박스 상태 업데이트
+            },
+            { position, text ->
+                viewModel.updateTaskText(position, text) // 텍스트 변경 이벤트 처리
             }
-            updateScheduleList()
-        }
+        )
+        binding.scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.scheduleRecyclerView.adapter = adapter
     }
 
-    private fun updateScheduleList() {
-        val currentList = scheduleData[selectedDate] ?: mutableListOf()
-        adapter.updateData(currentList)
+    private fun observeViewModel() {
+        // 날짜 변경 관찰
+        viewModel.selectedDate.observe(viewLifecycleOwner, Observer {
+            binding.scheduleTitle.text = it // 타이틀 업데이트
+            updateTaskList() // 날짜에 맞는 할일 리스트 업데이트
+        })
+
+        // 할일 리스트 변경 관찰
+        viewModel.scheduleData.observe(viewLifecycleOwner, Observer {
+            updateTaskList() // 할일 리스트 변경 시 RecyclerView 갱신
+        })
     }
 
-    private fun getTodayDate(): String {
-        val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val date = dateFormat.format(calendar.time)
-        return "$date 의 할일"
+    private fun updateTaskList() {
+        // 현재 날짜에 해당하는 할일 리스트 가져오기
+        val tasks = viewModel.getTasksForSelectedDate()
+        adapter = ScheduleAdapter(
+            tasks,
+            { position, isChecked ->
+                viewModel.updateTaskCheckedState(position, isChecked) // 체크박스 상태 업데이트
+            },
+            { position, text ->
+                viewModel.updateTaskText(position, text) // 텍스트 변경 이벤트 처리
+            }
+        )
+        binding.scheduleRecyclerView.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
