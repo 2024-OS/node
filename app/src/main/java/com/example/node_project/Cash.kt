@@ -70,7 +70,7 @@ class Cash : Fragment() {
 
                     // Firebase에서 받은 데이터를 itemList에 추가
                     for (child in snapshot.children) {
-                        val item = child.getValue(CashItem::class.java) // CashItem 객체로 변환
+                        val item = child.getValue(CashModel::class.java) // CashItem 객체로 변환
                         val key = child.key // 해당 항목의 고유 키
                         if (item != null && key != null) {
                             itemList.add(Pair(item.date, key)) // 날짜와 키를 함께 저장
