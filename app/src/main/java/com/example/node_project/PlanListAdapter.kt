@@ -1,14 +1,18 @@
 package com.example.node_project
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
+import com.google.firebase.database.FirebaseDatabase
 
 class PlanListAdapter(
     private val planList: MutableList<PlanItem>,
     private val onMapButtonClick: (PlanItem) -> Unit
 ) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
+
+    private val database = FirebaseDatabase.getInstance().getReference("PlanItems")
 
     inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlanItem) {
@@ -16,19 +20,40 @@ class PlanListAdapter(
             binding.checkBox.isChecked = item.isChecked
             binding.scoreText.text = item.score.toString()
 
-            binding.checkBox.setOnCheckedChangeListener(null)
-            binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-                item.isChecked = isChecked
+            // 제목 변경
+            binding.itemName.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) { // Focus가 사라졌을 때만 Firebase 업데이트
+                    item.title = binding.itemName.text.toString()
+                    updateItemInFirebase(item)
+                }
             }
 
-            binding.heartButton.setOnClickListener(null)
+            // 체크박스 상태 변경
+            binding.checkBox.setOnCheckedChangeListener(null) // 기존 리스너 제거
+            binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+                item.isChecked = isChecked
+                updateItemInFirebase(item)
+            }
+
+            // 점수 올리기 버튼
             binding.heartButton.setOnClickListener {
                 item.score += 1
                 binding.scoreText.text = item.score.toString()
+                updateItemInFirebase(item)
             }
 
+            // 지도 버튼 클릭
             binding.mapButton2.setOnClickListener {
                 onMapButtonClick(item)
+            }
+        }
+
+        private fun updateItemInFirebase(item: PlanItem) {
+            if (item.id.isNotEmpty()) {
+                database.child(item.id).setValue(item)
+                    .addOnFailureListener { exception ->
+                        Log.e("PlanListAdapter", "Failed to update item: ${exception.message}")
+                    }
             }
         }
     }
@@ -46,23 +71,4 @@ class PlanListAdapter(
     override fun getItemCount(): Int = planList.size
 
     fun getCheckedItems(): List<PlanItem> = planList.filter { it.isChecked }
-
-    fun addItem(item: PlanItem) {
-        planList.add(item)
-        notifyItemInserted(planList.size - 1)
-    }
-
-    fun removeItem(item: PlanItem) {
-        val index = planList.indexOfFirst { it.title == item.title }
-        if (index != -1) {
-            planList.removeAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
-    fun updateAllItems(newItems: List<PlanItem>) {
-        planList.clear()
-        planList.addAll(newItems)
-        notifyDataSetChanged()
-    }
 }
