@@ -44,7 +44,9 @@ class CalendarFragment : Fragment() {
         }
 
         binding.button3.setOnClickListener {
-            viewModel.addTask("새 작업")
+            val newTask = "새 작업"
+            viewModel.addTask(newTask)
+            binding.scheduleRecyclerView.smoothScrollToPosition(adapter.itemCount - 1)
         }
 
         binding.button4.setOnClickListener {
@@ -54,7 +56,7 @@ class CalendarFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = ScheduleAdapter(
-            listOf(),
+            mutableListOf(),
             { position, isChecked -> viewModel.updateTaskCheckedState(position, isChecked) },
             { position, text -> viewModel.updateTaskText(position, text) }
         )
@@ -64,13 +66,11 @@ class CalendarFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.tasksForDate.observe(viewLifecycleOwner, Observer { tasks ->
-            binding.scheduleRecyclerView.post {
-                adapter.updateData(tasks)
-            }
+            adapter.updateTasks(tasks)
         })
 
         viewModel.selectedDate.observe(viewLifecycleOwner, Observer { date ->
-            binding.scheduleTitle.text = date
+            binding.scheduleTitle.text = "$date 할 일"
         })
     }
 

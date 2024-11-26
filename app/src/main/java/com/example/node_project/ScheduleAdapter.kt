@@ -1,5 +1,7 @@
 package com.example.node_project
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.models.ScheduleItem
 
 class ScheduleAdapter(
-    private var scheduleList: List<ScheduleItem>,
+    private var scheduleList: MutableList<ScheduleItem>,
     private val onItemChecked: (Int, Boolean) -> Unit,
     private val onItemTextChanged: (Int, String) -> Unit
 ) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
@@ -17,6 +19,29 @@ class ScheduleAdapter(
     inner class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskEditText: EditText = itemView.findViewById(R.id.taskTextView)
         val checkBox: CheckBox = itemView.findViewById(R.id.taskCheckBox)
+
+        fun bind(task: ScheduleItem, position: Int) {
+            // TextWatcher 동적으로 추가 및 제거
+            taskEditText.setText(task.task)
+            taskEditText.setSelection(taskEditText.text.length) // 커서 위치 유지
+
+            taskEditText.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    onItemTextChanged(position, taskEditText.text.toString())
+                }
+            }
+
+            taskEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
+            checkBox.isChecked = task.isChecked
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                onItemChecked(position, isChecked)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
@@ -25,23 +50,13 @@ class ScheduleAdapter(
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
-        val task = scheduleList[position]
-
-        holder.taskEditText.setText(task.task)
-        holder.taskEditText.setOnFocusChangeListener { _, _ ->
-            onItemTextChanged(position, holder.taskEditText.text.toString())
-        }
-
-        holder.checkBox.isChecked = task.isChecked
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            onItemChecked(position, isChecked)
-        }
+        holder.bind(scheduleList[position], position)
     }
 
     override fun getItemCount(): Int = scheduleList.size
 
-    fun updateData(newData: List<ScheduleItem>) {
-        scheduleList = newData
+    fun updateTasks(newTasks: List<ScheduleItem>) {
+        scheduleList = newTasks.toMutableList()
         notifyDataSetChanged()
     }
 }
