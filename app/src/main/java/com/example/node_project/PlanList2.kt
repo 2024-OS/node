@@ -3,7 +3,6 @@ package com.example.node_project
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -22,20 +23,24 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.Locale
+import com.google.maps.android.SphericalUtil
 
 @Suppress("DEPRECATION")
 class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    private val defaultLocation = LatLng(37.60153324458494, 126.86503171920776) // 기본 위치 설정
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
-    private lateinit var placeEditText: EditText // 장소 입력 필드
-    private lateinit var searchButton: Button // 검색 버튼
-    private lateinit var addButton: Button // 마커추가 버튼
-    private lateinit var deleteButton: Button // 삭제 버튼
-    private var markers: MutableMap<String, Marker> = mutableMapOf() // 마커 저장용 맵
-    private var selectedMarker: Marker? = null // 선택된 마커
-    private var searchedLocation: LatLng? = null // 검색된 위치
-    private var searchedTitle: String? = null // 검색된 제목
+    private lateinit var placeEditText: EditText
+    private lateinit var searchButton: Button
+    private lateinit var addButton: Button
+    private lateinit var deleteButton: Button
+    private lateinit var markerRecyclerView: RecyclerView
+    private lateinit var markerListAdapter: MarkerListAdapter
+    private var markers: MutableMap<String, Marker> = mutableMapOf()
+    private var selectedMarker: Marker? = null
+    private var searchedLocation: LatLng? = null
+    private var searchedTitle: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,49 +48,51 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_plan_list2, container, false)
-        setupMapView(view, savedInstanceState) // MapView 초기화
+        setupMapView(view, savedInstanceState)
 
-        // UI 구성 요소 초기화
-        placeEditText = view.findViewById(R.id.placeEditText) // EditText
-        searchButton = view.findViewById(R.id.searchButton) // 검색 버튼
-        addButton = view.findViewById(R.id.addButton) // 마커추가 버튼
-        deleteButton = view.findViewById(R.id.deleteButton) // 삭제 버튼
+        placeEditText = view.findViewById(R.id.placeEditText)
+        searchButton = view.findViewById(R.id.searchButton)
+        addButton = view.findViewById(R.id.addButton)
+        deleteButton = view.findViewById(R.id.deleteButton)
+        markerRecyclerView = view.findViewById(R.id.markerRecyclerView)
 
-        // 검색 버튼 클릭 리스너 설정
         searchButton.setOnClickListener {
             val query = placeEditText.text.toString()
-            searchPlace(query) // 장소 검색 호출
+            if (query.isBlank()) {
+                Toast.makeText(requireContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                searchPlace(query)
+            }
         }
 
-        // 마커추가 버튼 클릭 리스너 설정
         addButton.setOnClickListener {
             searchedLocation?.let { location ->
                 searchedTitle?.let { title ->
-                    addMarkerAtLocation(location, title) // 마커 추가 호출
-                    saveToPreferences(location.latitude, location.longitude, title) // 결과 저장
+                    addMarkerAtLocation(location, title)
+                    saveToPreferences(location.latitude, location.longitude, title)
                     Toast.makeText(requireContext(), "$title 마커가 추가되었습니다.", Toast.LENGTH_SHORT).show()
-                    searchedLocation = null // 검색된 위치 초기화
-                    searchedTitle = null // 검색된 제목 초기화
+                    searchedLocation = null
+                    searchedTitle = null
                 }
             } ?: run {
                 Toast.makeText(requireContext(), "추가할 마커가 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 삭제 버튼 클릭 리스너 설정
         deleteButton.setOnClickListener {
             selectedMarker?.let {
-                removeMarker(it.title ?: "") // 선택된 마커 삭제 호출
-                selectedMarker = null // 선택된 마커 초기화
+                removeMarker(it.title ?: "")
+                selectedMarker = null
             } ?: run {
                 Toast.makeText(requireContext(), "선택된 마커가 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
+        setupMarkerRecyclerView()
+
         return view
     }
 
-    // MapView 초기화
     private fun setupMapView(view: View, savedInstanceState: Bundle?) {
         mapView = view.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
@@ -94,25 +101,25 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        googleMap.setOnMarkerClickListener(this) // 마커 클릭 리스너 설정
-        setupMapOptions() // 지도 설정 호출
-        loadSavedPlaces() // 저장된 장소 불러오기
+        googleMap.setOnMarkerClickListener(this)
+        setupMapOptions()
+        loadSavedPlaces()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        selectedMarker = marker // 선택된 마커 저장
-        Toast.makeText(requireContext(), "${marker.title} 마커가 선택되었습니다.", Toast.LENGTH_SHORT).show()
+        selectedMarker = marker
+        val distance = SphericalUtil.computeDistanceBetween(defaultLocation, marker.position)
+        val distanceInKm = distance / 1000
+        Toast.makeText(requireContext(), "${marker.title} 마커가 선택됨. 항공대와의 거리: ${String.format("%.2f", distanceInKm)} km", Toast.LENGTH_SHORT).show()
         return true
     }
 
-    // 지도 설정
     private fun setupMapOptions() {
-        val location = LatLng(37.60153324458494, 126.86503171920776) // 기본 위치
-        addMarkerAtLocation(location, "한국항공대학교") // 마커 추가
-        moveCameraToLocation(location, 15f) // 카메라 위치 조정
+        val location = LatLng(37.60153324458494, 126.86503171920776)
+        addMarkerAtLocation(location, "한국항공대학교")
+        moveCameraToLocation(location, 15f)
     }
 
-    // 장소 검색
     private fun searchPlace(query: String) {
         val geoCoder = android.location.Geocoder(requireContext(), Locale.getDefault())
         val results = geoCoder.getFromLocationName(query, 1)
@@ -122,29 +129,28 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
             val latitude = location.latitude
             val longitude = location.longitude
 
-            searchedLocation = LatLng(latitude, longitude) // 검색된 위치 저장
-            searchedTitle = query // 검색된 제목 저장
-            moveCameraToLocation(searchedLocation!!, 15f) // 카메라 위치 조정
+            searchedLocation = LatLng(latitude, longitude)
+            searchedTitle = query
+            moveCameraToLocation(searchedLocation!!, 15f)
             Toast.makeText(requireContext(), "$query 위치가 검색되었습니다. '마커추가' 버튼을 누르세요.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(requireContext(), "장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // 마커 삭제
     private fun removeMarker(title: String) {
         markers.entries.find { it.key.equals(title, ignoreCase = true) }?.let { entry ->
             val marker = entry.value
-            marker.remove() // 지도에서 마커 제거
-            markers.remove(entry.key) // 리스트에서 마커 제거
-            removeFromPreferences(title) // 저장된 데이터에서 마커 제거
+            marker.remove()
+            markers.remove(entry.key)
+            removeFromPreferences(title)
             Toast.makeText(requireContext(), "$title 마커가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            updateMarkerList()
         } ?: run {
             Toast.makeText(requireContext(), "$title 마커를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // 저장된 데이터에서 마커 제거
     private fun removeFromPreferences(title: String) {
         val sharedPreferences = requireActivity().getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -153,7 +159,6 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         }
     }
 
-    // 저장 결과 함수
     private fun saveToPreferences(latitude: Double, longitude: Double, query: String) {
         val sharedPreferences = requireActivity().getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -162,16 +167,16 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         }
     }
 
-    // 마커 추가
     private fun addMarkerAtLocation(location: LatLng, title: String) {
         val markerOptions = MarkerOptions()
             .position(location)
-            .title(title) // 제목 설정
+            .title(title)
             .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(title)))
 
         val marker = googleMap.addMarker(markerOptions)
         if (marker != null) {
-            markers[title] = marker // 마커를 맵에 저장
+            markers[title] = marker
+            updateMarkerList()
         }
     }
 
@@ -188,12 +193,10 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         return bitmap
     }
 
-    // 카메라 이동
     private fun moveCameraToLocation(location: LatLng, zoomLevel: Float) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
     }
 
-    // 저장된 장소 불러오기
     private fun loadSavedPlaces() {
         val sharedPreferences = requireActivity().getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         val allEntries = sharedPreferences.all
@@ -204,15 +207,24 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
                 val latitude = coordinates[0].toDoubleOrNull()
                 val longitude = coordinates[1].toDoubleOrNull()
                 if (latitude != null && longitude != null) {
-                    addMarkerAtLocation(LatLng(latitude, longitude), key) // 마커 추가
+                    addMarkerAtLocation(LatLng(latitude, longitude), key)
                 }
             }
         }
     }
 
+    private fun setupMarkerRecyclerView() {
+        markerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        markerListAdapter = MarkerListAdapter(markers.values.toList()) { marker ->
+            moveCameraToLocation(marker.position, 15f)
+        }
+        markerRecyclerView.adapter = markerListAdapter
+    }
 
+    private fun updateMarkerList() {
+        markerListAdapter.updateMarkers(markers.values.toList())
+    }
 
-    // 생명주기 메서드 처리
     override fun onResume() {
         super.onResume()
         mapView.onResume()

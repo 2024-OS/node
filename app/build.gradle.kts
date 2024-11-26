@@ -56,6 +56,8 @@ dependencies {
 
     implementation("com.google.android.material:material:1.12.0") // Design
 
+    implementation("com.google.maps.android:android-maps-utils:2.2.5") //SphericalUtil 사용해서 거리계산
+
     // 추가된 ViewModel 및 LiveData 의존성
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")

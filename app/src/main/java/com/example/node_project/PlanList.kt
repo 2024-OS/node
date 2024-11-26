@@ -62,9 +62,9 @@ class PlanList : Fragment() {
                 if (task.isSuccessful) {
                     itemList.add(newItem)
                     planListAdapter.notifyItemInserted(itemList.size - 1)
-                    showToast("데이터 저장 성공")
+                    showToast("데이터 생성 성공")
                 } else {
-                    showToast("데이터 저장 실패: ${task.exception?.message}")
+                    showToast("데이터 생성 실패: ${task.exception?.message}")
                 }
             }
     }
