@@ -4,76 +4,111 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.node_project.models.ScheduleItem
-import java.text.SimpleDateFormat
-import java.util.*
+import com.google.firebase.database.*
 
 class CalendarViewModel : ViewModel() {
 
-    private val _selectedDate = MutableLiveData<String>().apply {
-        value = getTodayDate() + " 할일"
-    }
+    private val databaseRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("tasks")
+
+    private val _selectedDate = MutableLiveData<String>()
     val selectedDate: LiveData<String> get() = _selectedDate
 
-    private val _scheduleData = MutableLiveData<MutableMap<String, MutableList<ScheduleItem>>>().apply {
-        value = mutableMapOf()
-    }
-    val scheduleData: LiveData<Map<String, List<ScheduleItem>>> = MutableLiveData<Map<String, List<ScheduleItem>>>().apply {
-        value = _scheduleData.value?.mapValues { it.value.toList() } ?: mapOf()
-    }
+    private val _allTasks = MutableLiveData<MutableMap<String, MutableList<ScheduleItem>>>()
+    private val _tasksForDate = MutableLiveData<List<ScheduleItem>>()
+    val tasksForDate: LiveData<List<ScheduleItem>> get() = _tasksForDate
 
-    private fun getTodayDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        return dateFormat.format(Date())
+    fun initializeDate() {
+        val today = "2024년 11월 26일"
+        _selectedDate.value = today
+        _tasksForDate.value = _allTasks.value?.get(today) ?: emptyList()
     }
 
     fun setDate(date: String) {
-        _selectedDate.value = "$date 할일"
+        _selectedDate.value = date
+        _tasksForDate.value = _allTasks.value?.get(date) ?: emptyList()
+    }
+
+    fun fetchTasks() {
+        databaseRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val allTasks = mutableMapOf<String, MutableList<ScheduleItem>>()
+                for (dateSnapshot in snapshot.children) {
+                    val date = dateSnapshot.key ?: continue
+                    val taskList = dateSnapshot.children.mapNotNull {
+                        it.getValue(ScheduleItem::class.java)
+                    }.toMutableList()
+                    allTasks[date] = taskList
+                }
+                _allTasks.postValue(allTasks)
+
+                _selectedDate.value?.let {
+                    _tasksForDate.postValue(allTasks[it] ?: emptyList())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Firebase error: ${error.message}")
+            }
+        })
     }
 
     fun addTask(task: String) {
         val date = _selectedDate.value ?: return
-        val data = _scheduleData.value ?: mutableMapOf()
-        val taskList = data.getOrPut(date) { mutableListOf() }
+        val allTasks = _allTasks.value ?: mutableMapOf()
+        val taskList = allTasks.getOrPut(date) { mutableListOf() }
         taskList.add(ScheduleItem(task))
-        _scheduleData.value = data
-        updateScheduleData()
+        _allTasks.value = allTasks
+        _tasksForDate.postValue(taskList)
+
+        saveTasksToFirebase(date, taskList)
     }
 
     fun removeCheckedTasks() {
         val date = _selectedDate.value ?: return
-        val data = _scheduleData.value ?: mutableMapOf()
-        data[date]?.removeAll { it.isChecked }
-        _scheduleData.value = data
-        updateScheduleData()
+        val allTasks = _allTasks.value ?: mutableMapOf()
+        val updatedTaskList = allTasks[date]?.filterNot { it.isChecked }?.toMutableList() ?: mutableListOf()
+        allTasks[date] = updatedTaskList
+        _allTasks.value = allTasks
+        _tasksForDate.postValue(updatedTaskList)
+
+        saveTasksToFirebase(date, updatedTaskList)
     }
 
-    // **체크 상태 업데이트**
     fun updateTaskCheckedState(position: Int, isChecked: Boolean) {
         val date = _selectedDate.value ?: return
-        val data = _scheduleData.value ?: return
-        val taskList = data[date] ?: return
-        taskList[position].isChecked = isChecked
-        _scheduleData.value = data // LiveData 갱신
-    }
+        val allTasks = _allTasks.value ?: return
+        val taskList = allTasks[date] ?: return
 
-    fun getTasksForSelectedDate(): List<ScheduleItem> {
-        val date = _selectedDate.value ?: return emptyList()
-        return _scheduleData.value?.get(date) ?: emptyList()
-    }
+        if (position in taskList.indices) {
+            taskList[position].isChecked = isChecked
+            _allTasks.value = allTasks
+            _tasksForDate.postValue(taskList)
 
-    private fun updateScheduleData() {
-        (scheduleData as MutableLiveData).value = _scheduleData.value?.mapValues { it.value.toList() } ?: mapOf()
+            saveTasksToFirebase(date, taskList)
+        }
     }
 
     fun updateTaskText(position: Int, newText: String) {
         val date = _selectedDate.value ?: return
-        val data = _scheduleData.value ?: return
-        val taskList = data[date] ?: return
+        val allTasks = _allTasks.value ?: return
+        val taskList = allTasks[date] ?: return
 
-        // 특정 작업의 텍스트 업데이트
-        taskList[position].task = newText
-        _scheduleData.value = data // LiveData 갱신
+        if (position in taskList.indices) {
+            taskList[position].task = newText
+            _allTasks.value = allTasks
+            _tasksForDate.postValue(taskList)
+
+            saveTasksToFirebase(date, taskList)
+        }
     }
 
-
+    private fun saveTasksToFirebase(date: String, taskList: List<ScheduleItem>) {
+        databaseRef.child(date).setValue(taskList)
+            .addOnSuccessListener {
+                println("Tasks successfully saved for date: $date")
+            }
+            .addOnFailureListener { error ->
+                println("Error saving tasks: ${error.message}")
+            }
+    }
 }

@@ -56,6 +56,11 @@ dependencies {
 
     implementation("com.google.android.material:material:1.12.0") // Design
 
+    // 추가된 ViewModel 및 LiveData 의존성
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+
+
     // Glide 이미지 라이브러리
     implementation("com.github.bumptech.glide:glide:4.12.0") // Glide
     kapt("com.github.bumptech.glide:compiler:4.12.0") // kapt 컴파일러
