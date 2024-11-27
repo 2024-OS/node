@@ -44,14 +44,22 @@
             android:imeOptions="actionDone" />
     </LinearLayout>
 
-    <!-- 설명 입력칸 -->
+    <!-- 링크 입력 및 표시 -->
     <EditText
+        android:id="@+id/itemDescriptionEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="링크 입력"
+        android:inputType="textUri"
+        android:imeOptions="actionDone"
+        android:padding="8dp" />
+
+    <TextView
         android:id="@+id/itemDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="링크"
-        android:inputType="textUri"
-        android:imeOptions="actionDone"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="4dp" />
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="gone"
+        android:padding="8dp"
+        android:clickable="true" />
 </LinearLayout>
