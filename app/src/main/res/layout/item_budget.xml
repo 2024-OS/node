@@ -21,21 +21,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="물품" />
+            android:hint="물품"
+            android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionDone" />
 
         <EditText
             android:id="@+id/itemQuantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="수량" />
+            android:hint="수량"
+            android:inputType="number"
+            android:imeOptions="actionDone" />
 
         <EditText
             android:id="@+id/itemPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="가격" />
+            android:hint="가격"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionDone" />
     </LinearLayout>
 
     <!-- 설명 입력칸 -->
@@ -44,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="링크"
+        android:inputType="textUri"
+        android:imeOptions="actionDone"
         android:layout_marginStart="48dp"
-    android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp" />
 </LinearLayout>
