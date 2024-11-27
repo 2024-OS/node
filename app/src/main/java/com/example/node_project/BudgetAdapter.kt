@@ -1,8 +1,12 @@
 package com.example.node_project
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemBudgetBinding
 import com.example.node_project.models.BudgetItem
@@ -14,17 +18,17 @@ class BudgetAdapter(
 
     fun updateData(newList: MutableList<BudgetItem>) {
         budgetList = newList
-        notifyDataSetChanged() // 데이터 전체 업데이트
+        notifyDataSetChanged()
     }
 
     fun addItem(item: BudgetItem) {
-        budgetList.add(0, item) // 새 아이템을 맨 위에 추가
-        notifyItemInserted(0) // 특정 위치만 갱신
+        budgetList.add(0, item)
+        notifyItemInserted(0)
     }
 
     fun deleteCheckedItems() {
         budgetList.removeAll { it.isChecked }
-        notifyDataSetChanged() // 전체 리스트 갱신
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BudgetViewHolder {
@@ -36,21 +40,59 @@ class BudgetAdapter(
         val item = budgetList[position]
         holder.bind(item)
 
-        // 기존 리스너 제거 후 CheckBox 상태 설정
+        // CheckBox 설정
         holder.binding.checkBox.setOnCheckedChangeListener(null)
         holder.binding.checkBox.isChecked = item.isChecked
-
-        // CheckBox 클릭 리스너 등록
         holder.binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             item.isChecked = isChecked
-            onItemUpdated(position, item) // 변경된 항목 업데이트
+            onItemUpdated(position, item)
         }
 
-        // EditText 필드에 데이터 설정 및 업데이트 리스너
+        // 물품, 수량, 가격 설정
+        holder.binding.itemName.setText(item.itemName)
         holder.binding.itemName.setOnEditorActionListener(createEditorActionListener(position, holder.binding.itemName, "itemName"))
+
+        holder.binding.itemQuantity.setText(item.itemQuantity)
         holder.binding.itemQuantity.setOnEditorActionListener(createEditorActionListener(position, holder.binding.itemQuantity, "itemQuantity"))
+
+        holder.binding.itemPrice.setText(item.itemPrice)
         holder.binding.itemPrice.setOnEditorActionListener(createEditorActionListener(position, holder.binding.itemPrice, "itemPrice"))
-        holder.binding.itemDescription.setOnEditorActionListener(createEditorActionListener(position, holder.binding.itemDescription, "itemDescription"))
+
+        // 링크 입력 후 저장 및 표시
+        holder.binding.itemDescriptionEdit.setText(item.itemDescription)
+        holder.binding.itemDescriptionEdit.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
+                val link = holder.binding.itemDescriptionEdit.text.toString()
+                item.itemDescription = link
+                holder.binding.itemDescriptionEdit.visibility = View.GONE
+                holder.binding.itemDescription.visibility = View.VISIBLE
+                holder.binding.itemDescription.text = link
+                onItemUpdated(position, item) // 업데이트
+                true
+            } else {
+                false
+            }
+        }
+
+        // 링크 클릭 이벤트
+        holder.binding.itemDescription.setOnClickListener {
+            val link = item.itemDescription
+            if (link.isNotEmpty() && android.util.Patterns.WEB_URL.matcher(link).matches()) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                it.context.startActivity(intent)
+            } else {
+                Toast.makeText(it.context, "유효한 링크가 아닙니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 초기 상태 설정
+        if (item.itemDescription.isNotEmpty()) {
+            holder.binding.itemDescription.visibility = View.VISIBLE
+            holder.binding.itemDescriptionEdit.visibility = View.GONE
+        } else {
+            holder.binding.itemDescription.visibility = View.GONE
+            holder.binding.itemDescriptionEdit.visibility = View.VISIBLE
+        }
     }
 
     override fun getItemCount(): Int = budgetList.size
@@ -65,11 +107,10 @@ class BudgetAdapter(
                     "itemName" -> updatedItem.itemName = updatedText
                     "itemQuantity" -> updatedItem.itemQuantity = updatedText
                     "itemPrice" -> updatedItem.itemPrice = updatedText
-                    "itemDescription" -> updatedItem.itemDescription = updatedText
                 }
 
-                onItemUpdated(position, updatedItem) // 수정된 데이터 업데이트
-                textView.clearFocus() // 포커스 해제
+                onItemUpdated(position, updatedItem)
+                textView.clearFocus()
                 true
             } else {
                 false
@@ -82,7 +123,7 @@ class BudgetAdapter(
             binding.itemName.setText(item.itemName)
             binding.itemQuantity.setText(item.itemQuantity)
             binding.itemPrice.setText(item.itemPrice)
-            binding.itemDescription.setText(item.itemDescription)
+            binding.itemDescription.text = item.itemDescription
         }
     }
 }
