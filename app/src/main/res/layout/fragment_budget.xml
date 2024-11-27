@@ -7,6 +7,7 @@
     android:background="#E0F7FA"
     tools:context=".BudgetFragment">
 
+    <!-- 상단 이미지 -->
     <ImageView
         android:id="@+id/topImage"
         android:layout_width="68dp"
@@ -15,70 +16,64 @@
         android:layout_marginTop="13dp"
         android:src="@drawable/img" />
 
+    <!-- 헤더 영역: 타이틀과 버튼 -->
     <LinearLayout
         android:id="@+id/scheduleHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topImage"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/scheduleTitle"
-            android:layout_width="189dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="예산안"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:translationX="20dp" />
+            android:layout_marginStart="16dp"
+            android:textColor="#000000" />
 
+        <!-- 추가 버튼 -->
         <Button
             android:id="@+id/bud_add_button"
-            android:layout_width="58dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:backgroundTint="#89A4F8"
-            android:text="+"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:rippleColor="#1E1F22" />
+            android:text="추가"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
+        <!-- 삭제 버튼 -->
         <Button
             android:id="@+id/bud_del_button"
-            android:layout_width="58dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:backgroundTint="#F0726F"
             android:text="삭제"
-            android:textAlignment="center"
-            android:textColor="#090909"
             android:textSize="14sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/scheduleHeader"
-        android:background="#000000" />
-
-    <!-- RecyclerView를 하얀색 박스로 감싸기 -->
+    <!-- 리스트를 표시할 RecyclerView -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/scheduleHeader"
         android:layout_marginTop="8dp"
-        android:padding="8dp"
         android:background="#FFFFFF"
+        android:padding="8dp"
         android:elevation="4dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/budgetRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false" />
+            android:layout_height="match_parent" />
     </FrameLayout>
-
 </RelativeLayout>

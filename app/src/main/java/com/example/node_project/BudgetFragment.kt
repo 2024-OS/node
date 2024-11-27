@@ -5,37 +5,53 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.node_project.databinding.FragmentBudgetBinding
+import com.example.node_project.models.BudgetItem
+import com.example.node_project.viewmodel.BudgetViewModel
 
 class BudgetFragment : Fragment() {
 
     private lateinit var binding: FragmentBudgetBinding
     private lateinit var budgetAdapter: BudgetAdapter
+    private val viewModel: BudgetViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentBudgetBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
 
-        // RecyclerView 초기화
-        budgetAdapter = BudgetAdapter(mutableListOf())
-        binding.budgetRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.budgetRecyclerView.adapter = budgetAdapter
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // 추가 버튼을 눌러 아이템 추가
+        setupRecyclerView()
+        observeViewModel()
+
         binding.budAddButton.setOnClickListener {
-            budgetAdapter.addItem(BudgetItem())
-            binding.budgetRecyclerView.scrollToPosition(0) // 리스트 맨 위로 스크롤
+            val newItem = BudgetItem()
+            viewModel.addBudgetItem(newItem)
         }
 
-        // 삭제 버튼 클릭 리스너 설정 (예: 체크된 항목 삭제)
         binding.budDelButton.setOnClickListener {
-            budgetAdapter.deleteCheckedItems()
+            viewModel.deleteCheckedItems()
         }
+    }
 
-        return view
+    private fun setupRecyclerView() {
+        budgetAdapter = BudgetAdapter(mutableListOf()) { position, updatedItem ->
+            viewModel.updateBudgetItem(updatedItem.id, updatedItem) // ID를 기반으로 업데이트
+        }
+        binding.budgetRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.budgetRecyclerView.adapter = budgetAdapter
+    }
+
+    private fun observeViewModel() {
+        viewModel.budgetItems.observe(viewLifecycleOwner) { items ->
+            budgetAdapter.updateData(items.toMutableList())
+        }
     }
 }

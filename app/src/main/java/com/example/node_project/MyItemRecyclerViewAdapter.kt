@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
-import com.example.node_project.BudgetItem
+import com.example.node_project.models.BudgetItem
 import com.example.node_project.databinding.ItemBudgetBinding
+
 
 class MyItemRecyclerViewAdapter(
     private val values: List<BudgetItem>
