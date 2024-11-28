@@ -24,6 +24,9 @@ class CashViewModel(application: Application) : AndroidViewModel(application) {
     private val _imageUrl = MutableLiveData<String>()
     val imageUrl: LiveData<String> get() = _imageUrl
 
+    private val _dataSaved = MutableLiveData<Boolean>()
+    val dataSaved: LiveData<Boolean> get() = _dataSaved
+
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val myRef: DatabaseReference = database.reference.child("cash_items")
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -85,9 +88,9 @@ class CashViewModel(application: Application) : AndroidViewModel(application) {
         myRef.child(key).setValue(cashModel)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showToast("데이터 저장 성공")
+                    _dataSaved.value = true // 데이터 저장 성공 후 UI에 반영
                 } else {
-                    showToast("데이터 저장 실패")
+                    _dataSaved.value = false
                 }
             }
     }
