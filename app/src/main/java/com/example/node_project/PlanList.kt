@@ -8,108 +8,52 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.node_project.databinding.FragmentPlanListBinding
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import android.widget.Toast
+
 
 class PlanList : Fragment() {
-    private lateinit var binding: FragmentPlanListBinding
-    private lateinit var planListAdapter: PlanListAdapter
-    private lateinit var database: DatabaseReference
-    private val itemList = mutableListOf<PlanItem>()
+    private lateinit var binding: FragmentPlanListBinding // View 바인딩 객체로, XML 레이아웃 파일에 정의된 UI 요소에 쉽게 접근할 수 있게 함
+    private lateinit var planListAdapter: PlanListAdapter // RecyclerView의 어댑터 객체로, 목록의 항목을 관리하는 역할
+    private val itemList = mutableListOf<PlanItem>()      // PlanItem 객체의 리스트를 저장하는 MutableList로, 이 리스트가 RecyclerView에 표시
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(  // 사용자 인터페이스(사용자 화면)를 생성하고 반환
+        inflater: LayoutInflater, container: ViewGroup?,              // inflate 메서드는 XML 레이아웃 파일을 뷰 객체로 변환하는 작업을 수행
+        // XML에서 설정한 UI 요소들을 binding 객체를 통해 쉽게 사용할 수 있게 됨
+        savedInstanceState: Bundle?    // Fragment의 생명주기 동안 UI 상태를 유지, 액티비티, Fragment 간에 데이터 전송
     ): View {
         binding = FragmentPlanListBinding.inflate(inflater, container, false)
 
-        // Firebase 초기화
-        database = FirebaseDatabase.getInstance().getReference("PlanItems")
+        setupRecyclerView()     // RecyclerView 설정 -> 안하면 RecyclerView가 동작하지 않음
+        setupButtonListeners()  // 버튼 리스너 설정  -> 안하면 버튼이 동작하지 않음
 
-        setupRecyclerView()
-        setupButtonListeners()
-
-        // Firebase 데이터 로드
-        loadDataFromFirebase()
-
-        return binding.root
+        return binding.root     // UI를 사용자에게 보여줄 준비가 완료됨
     }
 
     private fun setupRecyclerView() {
-        planListAdapter = PlanListAdapter(itemList) { item ->
-            navigateToMap(item)
-        }
-        binding.recPlan.layoutManager = LinearLayoutManager(context)
-        binding.recPlan.adapter = planListAdapter
+        planListAdapter = PlanListAdapter(itemList, onMapButtonClick = {})                  // 어댑터에 항목 리스트 전달
+        binding.recPlan.layoutManager = LinearLayoutManager(context) // 레이아웃 매니저 설정
+        binding.recPlan.adapter = planListAdapter                    // 어댑터 설정
     }
 
     private fun setupButtonListeners() {
-        binding.addButtonPlan.setOnClickListener { addNewItem() }
-        binding.deleteButton.setOnClickListener { deleteCheckedItems() }
-        binding.mapButton.setOnClickListener { navigateToMap() }
+        binding.addButtonPlan.setOnClickListener { addNewItem() }        // 추가 버튼 클릭
+        binding.deleteButton.setOnClickListener { deleteCheckedItems() } // 삭제 버튼 클릭
+        binding.mapButton.setOnClickListener { navigateToMap() }         // 지도 버튼 클릭
     }
+
 
     private fun addNewItem() {
-        val newItem = PlanItem(title = "새 장소")
-        val uniqueKey = database.push().key ?: return // 고유 키 생성
-
-        newItem.id = uniqueKey // PlanItem에 고유 키 저장
-
-        // Firebase에 데이터 저장
-        database.child(uniqueKey).setValue(newItem)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    itemList.add(newItem)
-                    planListAdapter.notifyItemInserted(itemList.size - 1)
-                    showToast("데이터 생성 성공")
-                } else {
-                    showToast("데이터 생성 실패: ${task.exception?.message}")
-                }
-            }
+        val newItem = PlanItem(title = "새 장소")                          // 새 장소 항목 생성
+        itemList.add(newItem)                                             // 리스트에 추가
+        planListAdapter.notifyItemInserted(itemList.size - 1)     // 어댑터에 변경 사항 알림
     }
 
-    private fun deleteCheckedItems() {
+    private fun deleteCheckedItems() {           // 체크된 항목 가져오기 및 삭제
         val checkedItems = planListAdapter.getCheckedItems()
-
-        checkedItems.forEach { item ->
-            if (item.id.isNotEmpty()) {
-                database.child(item.id).removeValue() // Firebase에서 삭제
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val position = itemList.indexOf(item)
-                            itemList.remove(item)
-                            planListAdapter.notifyItemRemoved(position)
-                            showToast("삭제 성공")
-                        } else {
-                            showToast("삭제 실패: ${task.exception?.message}")
-                        }
-                    }
-            }
-        }
+        itemList.removeAll(checkedItems)        // 리스트에서 체크된 항목 삭제
+        planListAdapter.notifyDataSetChanged()  // 어댑터에 변경 사항 알림
     }
 
-    private fun loadDataFromFirebase() {
-        database.get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                val loadedItems = snapshot.children.mapNotNull {
-                    val item = it.getValue(PlanItem::class.java)
-                    item?.apply { id = it.key ?: "" } // Firebase 키를 PlanItem에 저장
-                }
-                itemList.clear()
-                itemList.addAll(loadedItems)
-                planListAdapter.notifyDataSetChanged()
-            }
-        }.addOnFailureListener { exception ->
-            showToast("데이터 로드 실패: ${exception.message}")
-        }
-    }
-
-    private fun navigateToMap(item: PlanItem? = null) {
+    private fun navigateToMap() {
         findNavController().navigate(R.id.action_planList_to_mapFrag) // 지도 프래그먼트로 이동
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
