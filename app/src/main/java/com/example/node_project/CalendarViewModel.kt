@@ -1,10 +1,13 @@
 package com.example.node_project.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.node_project.models.ScheduleItem
 import com.google.firebase.database.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CalendarViewModel : ViewModel() {
 
@@ -17,10 +20,19 @@ class CalendarViewModel : ViewModel() {
     private val _tasksForDate = MutableLiveData<List<ScheduleItem>>()
     val tasksForDate: LiveData<List<ScheduleItem>> get() = _tasksForDate
 
+    // 현재 날짜를 가져오는 함수
     fun initializeDate() {
-        val today = "2024년 11월 26일"
+        val today = getCurrentDate()  // 현재 날짜를 가져오는 함수 호출
         _selectedDate.value = today
         _tasksForDate.value = _allTasks.value?.get(today) ?: emptyList()
+    }
+
+    // 현재 날짜를 "yyyy년 MM월 dd일" 형식으로 반환하는 함수
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val format = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+        format.timeZone = TimeZone.getTimeZone("Asia/Seoul") // KST로 타임존 설정
+        return format.format(calendar.time)
     }
 
     fun setDate(date: String) {
