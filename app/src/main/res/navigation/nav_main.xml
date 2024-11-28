@@ -68,7 +68,7 @@
     <!-- 회계내역 수정 및 추가 화면 -->
     <fragment
         android:id="@+id/cashItemFragment"
-        android:name="com.example.node_project.CashItemFragment"
+        android:name="com.example.node_project.CashView"
         android:label="Cash Item"
         tools:layout="@layout/fragment_cash_item">
 
