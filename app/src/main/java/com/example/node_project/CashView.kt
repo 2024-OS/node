@@ -4,21 +4,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Toast
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Button
+import android.app.Activity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import androidx.navigation.fragment.findNavController
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.app.Activity
-import com.bumptech.glide.Glide
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 
 class CashView : Fragment() {
+
     private lateinit var etDate: EditText
     private lateinit var etAmount: EditText
     private lateinit var etContent: EditText
@@ -69,34 +68,32 @@ class CashView : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.date.observe(viewLifecycleOwner, Observer {
+        // ViewModel의 데이터를 UI에 반영
+        viewModel.date.observe(viewLifecycleOwner) {
             etDate.setText(it)
-        })
+        }
 
-        viewModel.amount.observe(viewLifecycleOwner, Observer {
+        viewModel.amount.observe(viewLifecycleOwner) {
             etAmount.setText(it)
-        })
+        }
 
-        viewModel.content.observe(viewLifecycleOwner, Observer {
+        viewModel.content.observe(viewLifecycleOwner) {
             etContent.setText(it)
-        })
+        }
 
-        viewModel.imageUrl.observe(viewLifecycleOwner, Observer { url ->
+        viewModel.imageUrl.observe(viewLifecycleOwner) { url ->
             if (url.isNotEmpty()) {
                 Glide.with(this).load(url).into(ivImage)
             } else {
                 ivImage.setImageResource(R.drawable.picture)
             }
-        })
+        }
 
-        viewModel.dataSaved.observe(viewLifecycleOwner, Observer { isSaved ->
+        viewModel.dataSaved.observe(viewLifecycleOwner) { isSaved ->
             if (isSaved) {
-                Toast.makeText(context, "데이터 저장 성공", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack() // 저장 후 이전 화면으로 돌아가기
-            } else {
-                Toast.makeText(context, "데이터 저장 실패", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
     private fun openGallery() {
