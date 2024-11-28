@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.Toast
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +54,6 @@ class CashView : Fragment() {
                 etContent.text.toString(),
                 imageUri
             )
-            findNavController().popBackStack()
         }
 
         btnDelete.setOnClickListener {
@@ -66,19 +66,6 @@ class CashView : Fragment() {
         }
 
         return view
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, 100)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-            imageUri = data?.data
-            ivImage.setImageURI(imageUri)
-        }
     }
 
     private fun setupObservers() {
@@ -96,11 +83,32 @@ class CashView : Fragment() {
 
         viewModel.imageUrl.observe(viewLifecycleOwner, Observer { url ->
             if (url.isNotEmpty()) {
-                // Load image using Glide or similar library
                 Glide.with(this).load(url).into(ivImage)
             } else {
                 ivImage.setImageResource(R.drawable.picture)
             }
         })
+
+        viewModel.dataSaved.observe(viewLifecycleOwner, Observer { isSaved ->
+            if (isSaved) {
+                Toast.makeText(context, "데이터 저장 성공", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack() // 저장 후 이전 화면으로 돌아가기
+            } else {
+                Toast.makeText(context, "데이터 저장 실패", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, 100)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            imageUri = data?.data
+            ivImage.setImageURI(imageUri)
+        }
     }
 }
