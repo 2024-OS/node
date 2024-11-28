@@ -4,20 +4,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Button
+import android.app.Activity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import androidx.navigation.fragment.findNavController
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.app.Activity
-import com.bumptech.glide.Glide
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 
 class CashView : Fragment() {
+
     private lateinit var etDate: EditText
     private lateinit var etAmount: EditText
     private lateinit var etContent: EditText
@@ -53,7 +53,6 @@ class CashView : Fragment() {
                 etContent.text.toString(),
                 imageUri
             )
-            findNavController().popBackStack()
         }
 
         btnDelete.setOnClickListener {
@@ -68,6 +67,35 @@ class CashView : Fragment() {
         return view
     }
 
+    private fun setupObservers() {
+        // ViewModel의 데이터를 UI에 반영
+        viewModel.date.observe(viewLifecycleOwner) {
+            etDate.setText(it)
+        }
+
+        viewModel.amount.observe(viewLifecycleOwner) {
+            etAmount.setText(it)
+        }
+
+        viewModel.content.observe(viewLifecycleOwner) {
+            etContent.setText(it)
+        }
+
+        viewModel.imageUrl.observe(viewLifecycleOwner) { url ->
+            if (url.isNotEmpty()) {
+                Glide.with(this).load(url).into(ivImage)
+            } else {
+                ivImage.setImageResource(R.drawable.picture)
+            }
+        }
+
+        viewModel.dataSaved.observe(viewLifecycleOwner) { isSaved ->
+            if (isSaved) {
+                findNavController().popBackStack() // 저장 후 이전 화면으로 돌아가기
+            }
+        }
+    }
+
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 100)
@@ -79,28 +107,5 @@ class CashView : Fragment() {
             imageUri = data?.data
             ivImage.setImageURI(imageUri)
         }
-    }
-
-    private fun setupObservers() {
-        viewModel.date.observe(viewLifecycleOwner, Observer {
-            etDate.setText(it)
-        })
-
-        viewModel.amount.observe(viewLifecycleOwner, Observer {
-            etAmount.setText(it)
-        })
-
-        viewModel.content.observe(viewLifecycleOwner, Observer {
-            etContent.setText(it)
-        })
-
-        viewModel.imageUrl.observe(viewLifecycleOwner, Observer { url ->
-            if (url.isNotEmpty()) {
-                // Load image using Glide or similar library
-                Glide.with(this).load(url).into(ivImage)
-            } else {
-                ivImage.setImageResource(R.drawable.picture)
-            }
-        })
     }
 }

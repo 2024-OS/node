@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#E0F7FA"
     android:padding="20dp"
-    tools:context=".CashItemFragment">
+    tools:context=".CashView">
 
 
     <!-- OS 이미지 -->

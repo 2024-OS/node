@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class CashAdapter(
-    private val itemList: List<Pair<String, String>>, // 날짜와 키를 저장
-    private val onItemClick: (Pair<String, String>) -> Unit
+    private val itemList: List<Pair<String, String>>, // 데이터 불변 리스트로 변경
+    private val onItemClick: (Pair<String, String>) -> Unit // 클릭 시 호출되는 함수
 ) : RecyclerView.Adapter<CashAdapter.CashViewHolder>() {
 
     inner class CashViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -16,7 +16,7 @@ class CashAdapter(
 
         init {
             itemView.setOnClickListener {
-                val item = itemList[adapterPosition] // 클릭된 날짜와 키를 가져옴
+                val item = itemList[bindingAdapterPosition]
                 onItemClick(item) // 클릭 시 onItemClick 호출
             }
         }
