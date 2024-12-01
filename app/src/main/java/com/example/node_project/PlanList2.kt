@@ -36,7 +36,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
     private lateinit var addButton: Button
     private lateinit var deleteButton: Button
     private lateinit var markerRecyclerView: RecyclerView
-    private lateinit var markerListAdapter: MarkerListAdapter
+    private lateinit var planMarkerListAdapter: PlanMarkerListAdapter
     private var markers: MutableMap<String, Marker> = mutableMapOf()
     private var selectedMarker: Marker? = null
     private var searchedLocation: LatLng? = null
@@ -215,14 +215,14 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
 
     private fun setupMarkerRecyclerView() {
         markerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        markerListAdapter = MarkerListAdapter(markers.values.toList()) { marker ->
+        planMarkerListAdapter = PlanMarkerListAdapter(markers.values.toList()) { marker ->
             moveCameraToLocation(marker.position, 15f)
         }
-        markerRecyclerView.adapter = markerListAdapter
+        markerRecyclerView.adapter = planMarkerListAdapter
     }
 
     private fun updateMarkerList() {
-        markerListAdapter.updateMarkers(markers.values.toList())
+        planMarkerListAdapter.updateMarkers(markers.values.toList())
     }
 
     override fun onResume() {

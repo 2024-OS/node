@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.CustomMarkerBinding
 import com.google.android.gms.maps.model.Marker
 
-class MarkerListAdapter(
+class PlanMarkerListAdapter(
     private var markers: List<Marker>,
     private val onMarkerClick: (Marker) -> Unit
-) : RecyclerView.Adapter<MarkerListAdapter.MarkerViewHolder>() {
+) : RecyclerView.Adapter<PlanMarkerListAdapter.MarkerViewHolder>() {
 
     inner class MarkerViewHolder(private val binding: CustomMarkerBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(marker: Marker) {
