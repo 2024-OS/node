@@ -7,13 +7,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
-class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit) : ListAdapter<PlanItem, PlanListAdapter.PlanViewHolder>(PlanDiffCallback()) {
+class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit)
+    : ListAdapter<PlanItem, PlanListAdapter.PlanViewHolder>(PlanDiffCallback()) {
+
     inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlanItem) {
+            // 아이템 데이터를 뷰에 바인딩
             binding.itemName.setText(item.title)
             binding.scoreText.text = item.score.toString()
 
-            // 체크박스 리스너 임시 제거
+            // 체크박스 리스너 설정
             binding.checkBox.setOnCheckedChangeListener(null)
             binding.checkBox.isChecked = item.isChecked
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -21,13 +24,14 @@ class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit) : ListAdapt
                 onItemUpdated(item)
             }
 
-
+            // 하트 버튼 클릭 리스너 설정
             binding.heartButton.setOnClickListener {
                 item.score += 1
                 binding.scoreText.text = item.score.toString()
                 onItemUpdated(item)
             }
 
+            // 아이템 이름 변경 리스너 설정
             binding.itemName.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     item.title = binding.itemName.text.toString()
@@ -46,9 +50,11 @@ class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit) : ListAdapt
         holder.bind(getItem(position))
     }
 
+    // 체크된 아이템 반환
     fun getCheckedItems(): List<PlanItem> = currentList.filter { it.isChecked }
 }
 
+// DiffUtil을 사용한 리스트 업데이트 최적화
 class PlanDiffCallback : DiffUtil.ItemCallback<PlanItem>() {
     override fun areItemsTheSame(oldItem: PlanItem, newItem: PlanItem): Boolean {
         return oldItem.id == newItem.id

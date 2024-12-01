@@ -16,16 +16,21 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
+// Fragment를 상속받고 OnMapReadyCallback 인터페이스를 구현하여 지도 기능을 통합
 class PlanList2 : Fragment(), OnMapReadyCallback {
+    // View Binding을 사용하여 레이아웃 요소에 쉽게 접근
     private lateinit var binding: FragmentPlanList2Binding
+    // ViewModel을 사용하여 UI와 데이터 처리 로직을 분리
     private val viewModel: PlanList2ViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
     private lateinit var planMarkerListAdapter: PlanMarkerListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // View Binding을 통해 레이아웃 인플레이트
         binding = FragmentPlanList2Binding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,11 +43,13 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun setupMapView(savedInstanceState: Bundle?) {
+        // MapView 초기화 및 비동기적으로 지도 로드
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
     }
 
     private fun setupUI() {
+        // 버튼 클릭 리스너 설정
         binding.searchButton.setOnClickListener {
             val query = binding.placeEditText.text.toString()
             if (query.isBlank()) {
@@ -64,6 +71,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun observeViewModel() {
+        // ViewModel의 LiveData를 관찰하여 UI 업데이트
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
             updateMarkerList(markers.values.toList())
         }
@@ -89,14 +97,17 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun setupMapOptions() {
+        // 초기 지도 설정
         moveCameraToLocation(viewModel.defaultLocation, 15f)
     }
 
     private fun moveCameraToLocation(location: LatLng, zoomLevel: Float) {
+        // 지도 카메라 이동
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
     }
 
     private fun setupMarkerRecyclerView() {
+        // RecyclerView 설정
         binding.markerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         planMarkerListAdapter = PlanMarkerListAdapter(emptyList()) { marker ->
             moveCameraToLocation(marker.position, 15f)
@@ -105,10 +116,11 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateMarkerList(markers: List<Marker>) {
+        // 마커 목록 업데이트
         planMarkerListAdapter.updateMarkers(markers)
     }
 
-    // Lifecycle methods
+    // MapView 생명주기 메서드들
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()

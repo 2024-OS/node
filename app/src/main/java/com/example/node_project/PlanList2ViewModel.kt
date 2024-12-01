@@ -22,31 +22,39 @@ import java.util.Locale
 
 @Suppress("DEPRECATION")
 class PlanList2ViewModel(application: Application) : AndroidViewModel(application) {
+    // Context 참조를 위한 변수 (메모리 누수 방지를 위해 @SuppressLint 사용)
     @SuppressLint("StaticFieldLeak")
     private val context: Context = application.applicationContext
+
+    // 기본 위치 설정 (한국항공대학교 위치)
     val defaultLocation = LatLng(37.60153324458494, 126.86503171920776)
 
+    // 마커 목록을 위한 LiveData
     private val _markers = MutableLiveData<MutableMap<String, Marker>>(mutableMapOf())
     val markers: LiveData<MutableMap<String, Marker>> = _markers
 
+    // 선택된 마커를 위한 LiveData
     private val _selectedMarker = MutableLiveData<Marker?>()
     val selectedMarker: LiveData<Marker?> = _selectedMarker
 
+    // 검색된 위치와 제목을 위한 LiveData
     private val _searchedLocation = MutableLiveData<LatLng?>()
     val searchedLocation: LiveData<LatLng?> = _searchedLocation
-
     private val _searchedTitle = MutableLiveData<String?>()
     val searchedTitle: LiveData<String?> = _searchedTitle
 
+    // 토스트 메시지를 위한 LiveData
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
     private lateinit var googleMap: GoogleMap
 
+    // GoogleMap 객체 설정
     fun setGoogleMap(map: GoogleMap) {
         googleMap = map
     }
 
+    // 장소 검색 함수
     fun searchPlace(query: String) {
         val geoCoder = Geocoder(context, Locale.getDefault())
         val results = geoCoder.getFromLocationName(query, 1)
@@ -62,6 +70,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // 마커 추가 함수
     fun addMarker() {
         val location = _searchedLocation.value
         val title = _searchedTitle.value
@@ -76,6 +85,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // 선택된 마커 삭제 함수
     fun deleteSelectedMarker() {
         _selectedMarker.value?.let {
             removeMarker(it.title ?: "")
@@ -85,6 +95,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // 마커 클릭 이벤트 처리 함수
     fun onMarkerClick(marker: Marker): Boolean {
         _selectedMarker.value = marker
         val distance = SphericalUtil.computeDistanceBetween(defaultLocation, marker.position)
@@ -93,6 +104,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         return true
     }
 
+    // 특정 위치에 마커 추가 함수
     private fun addMarkerAtLocation(location: LatLng, title: String) {
         val markerOptions = MarkerOptions()
             .position(location)
@@ -104,6 +116,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         _markers.value = newMarkers
     }
 
+    // 마커 제거 함수
     private fun removeMarker(title: String) {
         val currentMarkers = _markers.value ?: return
         currentMarkers.entries.find { it.key.equals(title, ignoreCase = true) }?.let { entry ->
@@ -117,6 +130,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // SharedPreferences에 마커 정보 저장
     private fun saveToPreferences(latitude: Double, longitude: Double, query: String) {
         val sharedPreferences = context.getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -125,6 +139,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // SharedPreferences에서 마커 정보 제거
     private fun removeFromPreferences(title: String) {
         val sharedPreferences = context.getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -133,6 +148,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // 저장된 마커 불러오기
     fun loadSavedPlaces() {
         val sharedPreferences = context.getSharedPreferences("SavedPlaces", Context.MODE_PRIVATE)
         val allEntries = sharedPreferences.all
@@ -148,6 +164,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // 커스텀 마커 생성 함수
     private fun createCustomMarker(title: String): Bitmap {
         val view = LayoutInflater.from(context).inflate(R.layout.custom_marker, null)
         val markerTextView = view.findViewById<TextView>(R.id.markerTextView)
@@ -160,6 +177,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         return bitmap
     }
 
+    // MarkerOptions를 Marker로 변환하는 확장 함수
     private fun MarkerOptions.toMarker(map: GoogleMap): Marker {
         return map.addMarker(this) ?: throw IllegalStateException("Failed to add marker to map")
     }

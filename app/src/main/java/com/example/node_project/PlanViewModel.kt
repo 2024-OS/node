@@ -7,9 +7,14 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.database.*
 
 class PlanViewModel : ViewModel() {
+    // Firebase Realtime Database 참조
     private val database = FirebaseDatabase.getInstance().getReference("plans")
+
+    // LiveData를 사용한 계획 목록 관리
     private val _plans = MutableLiveData<List<PlanItem>>()
     val plans: LiveData<List<PlanItem>> = _plans
+
+    // 삭제된 아이템 ID 추적
     private val deletedItemIds = mutableSetOf<String>()
 
     init {
@@ -17,6 +22,7 @@ class PlanViewModel : ViewModel() {
     }
 
     private fun loadPlans() {
+        // Firebase에서 데이터 로드 및 실시간 업데이트
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val planList = mutableListOf<PlanItem>()
@@ -38,18 +44,21 @@ class PlanViewModel : ViewModel() {
         })
     }
 
+    // 새 계획 추가
     fun addPlan(plan: PlanItem) {
         val newPlanRef = database.push()
         plan.id = newPlanRef.key
         newPlanRef.setValue(plan)
     }
 
+    // 계획 업데이트
     fun updatePlan(plan: PlanItem) {
         plan.id?.let { id ->
             database.child(id).setValue(plan)
         }
     }
 
+    // 선택된 계획들 삭제
     fun deletePlans(plans: List<PlanItem>) {
         val updates = HashMap<String, Any?>()
         plans.forEach { plan ->
@@ -61,6 +70,7 @@ class PlanViewModel : ViewModel() {
         database.updateChildren(updates)
     }
 
+    // 삭제된 아이템 목록 초기화
     fun clearDeletedItems() {
         deletedItemIds.clear()
     }
