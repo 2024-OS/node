@@ -1,5 +1,6 @@
 package com.example.node_project
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,7 @@ class PlanList : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        planListAdapter = PlanListAdapter(itemList, onMapButtonClick = {})                  // 어댑터에 항목 리스트 전달
+        planListAdapter = PlanListAdapter(itemList)                  // 어댑터에 항목 리스트 전달
         binding.recPlan.layoutManager = LinearLayoutManager(context) // 레이아웃 매니저 설정
         binding.recPlan.adapter = planListAdapter                    // 어댑터 설정
     }
@@ -47,6 +48,7 @@ class PlanList : Fragment() {
         planListAdapter.notifyItemInserted(itemList.size - 1)     // 어댑터에 변경 사항 알림
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun deleteCheckedItems() {           // 체크된 항목 가져오기 및 삭제
         val checkedItems = planListAdapter.getCheckedItems()
         itemList.removeAll(checkedItems)        // 리스트에서 체크된 항목 삭제

@@ -1,5 +1,6 @@
 package com.example.node_project
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -99,6 +100,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         mapView.getMapAsync(this)
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         googleMap.setOnMarkerClickListener(this)
@@ -106,6 +108,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         loadSavedPlaces()
     }
 
+    @SuppressLint("DefaultLocale")
     override fun onMarkerClick(marker: Marker): Boolean {
         selectedMarker = marker
         val distance = SphericalUtil.computeDistanceBetween(defaultLocation, marker.position)
@@ -180,6 +183,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListene
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun createCustomMarker(title: String): Bitmap {
         val markerView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_marker, null)
         val markerTextView = markerView.findViewById<TextView>(R.id.markerTextView)

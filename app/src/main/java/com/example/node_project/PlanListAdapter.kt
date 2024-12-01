@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
-class PlanListAdapter(private val planList: MutableList<PlanItem>,
-                      private val onMapButtonClick: (PlanItem) -> Unit) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
+class PlanListAdapter(private val planList: MutableList<PlanItem>) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
     inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlanItem) {
             binding.itemName.setText(item.title)            // 자동으로 수정 가능 상태로 설정됨
@@ -44,26 +43,4 @@ class PlanListAdapter(private val planList: MutableList<PlanItem>,
 
     // 체크된 항목 반환
     fun getCheckedItems(): List<PlanItem> = planList.filter { it.isChecked }
-
-    // 항목 추가
-    fun addItem(item: PlanItem) {
-        planList.add(item)
-        notifyItemInserted(planList.size - 1)
-    }
-
-    // 항목 삭제
-    fun removeItem(item: PlanItem) {
-        val index = planList.indexOfFirst { it.title == item.title }
-        if (index != -1) {
-            planList.removeAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
-    // 모든 항목 업데이트
-    fun updateAllItems(newItems: List<PlanItem>) {
-        planList.clear()
-        planList.addAll(newItems)
-        notifyDataSetChanged() // 전체 데이터 갱신
-    }
 }
