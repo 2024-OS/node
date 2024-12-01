@@ -1,4 +1,5 @@
-// 데이터를 나타내는 Model 부분
+// Model
+
 package com.example.node_project
 
 data class CashModel(
