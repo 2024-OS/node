@@ -1,5 +1,6 @@
 package com.example.node_project
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ class PlanMarkerListAdapter(
 
     override fun getItemCount(): Int = markers.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateMarkers(newMarkers: List<Marker>) {
         markers = newMarkers
         notifyDataSetChanged()

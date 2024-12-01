@@ -1,7 +1,8 @@
 package com.example.node_project
 
 data class PlanItem(
-    var title: String = "새 장소",     // 계획 제목
-    var isChecked: Boolean = false,     // 체크박스 상태
-    var score: Int = 0                   // 점수
+    var id: String? = null,
+    var title: String = "새 장소",
+    var isChecked: Boolean = false,
+    var score: Int = 0
 )
