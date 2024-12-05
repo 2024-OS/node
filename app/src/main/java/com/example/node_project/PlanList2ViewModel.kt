@@ -35,13 +35,15 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
 
     // 선택된 마커를 위한 LiveData
     private val _selectedMarker = MutableLiveData<Marker?>()
-    val selectedMarker: LiveData<Marker?> = _selectedMarker
+
+    // val selectedMarker: LiveData<Marker?> = _selectedMarker 미사용
 
     // 검색된 위치와 제목을 위한 LiveData
     private val _searchedLocation = MutableLiveData<LatLng?>()
     val searchedLocation: LiveData<LatLng?> = _searchedLocation
     private val _searchedTitle = MutableLiveData<String?>()
-    val searchedTitle: LiveData<String?> = _searchedTitle
+
+   // val searchedTitle: LiveData<String?> = _searchedTitle 미사용
 
     // 토스트 메시지를 위한 LiveData
     private val _toastMessage = MutableLiveData<String>()

@@ -16,11 +16,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
-// Fragment를 상속받고 OnMapReadyCallback 인터페이스를 구현하여 지도 기능을 통합
 class PlanList2 : Fragment(), OnMapReadyCallback {
-    // View Binding을 사용하여 레이아웃 요소에 쉽게 접근
     private lateinit var binding: FragmentPlanList2Binding
-    // ViewModel을 사용하여 UI와 데이터 처리 로직을 분리
     private val viewModel: PlanList2ViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
     private lateinit var planMarkerListAdapter: PlanMarkerListAdapter
@@ -36,14 +33,14 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        //super.onViewCreated(view, savedInstanceState) 미사용
         setupMapView(savedInstanceState)
         setupUI()
         observeViewModel()
     }
 
     private fun setupMapView(savedInstanceState: Bundle?) {
-        // MapView 초기화 및 비동기적으로 지도 로드
+        // MapView 초기화 및 지도 로드
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
     }
@@ -51,7 +48,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     private fun setupUI() {
         // 버튼 클릭 리스너 설정
         binding.searchButton.setOnClickListener {
-            val query = binding.placeEditText.text.toString()
+            val query = binding.placeEditText.text.toString()  // 검색어 입력받기
             if (query.isBlank()) {
                 Toast.makeText(requireContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
@@ -102,7 +99,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun moveCameraToLocation(location: LatLng, zoomLevel: Float) {
-        // 지도 카메라 이동
+        // 클릭된 마커 위치로 이동
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
     }
 

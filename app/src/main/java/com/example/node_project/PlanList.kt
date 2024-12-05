@@ -24,8 +24,8 @@ class PlanList : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        // View Binding을 통해 레이아웃 인플레이트
+
+    ): View {  // View Binding을 통해 레이아웃 인플레이트
         binding = FragmentPlanListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
@@ -35,8 +35,7 @@ class PlanList : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView() {
-        // RecyclerView 어댑터 초기화 및 설정
+    private fun setupRecyclerView() { // RecyclerView 어댑터 초기화 및 설정
         planListAdapter = PlanListAdapter { item ->
             viewModel.updatePlan(item)
         }
@@ -44,40 +43,34 @@ class PlanList : Fragment() {
         binding.recPlan.adapter = planListAdapter
     }
 
-    private fun setupButtonListeners() {
-        // 버튼 클릭 리스너 설정
+    private fun setupButtonListeners() { // 버튼 클릭 리스너 설정
         binding.addButtonPlan.setOnClickListener { addNewItem() }
         binding.deleteButton.setOnClickListener { deleteCheckedItems() }
         binding.mapButton.setOnClickListener { navigateToMap() }
     }
 
-    private fun observePlans() {
-        // ViewModel의 plans LiveData 관찰
+    private fun observePlans() { // ViewModel의 plans LiveData 관찰
         viewModel.plans.observe(viewLifecycleOwner, Observer { plans ->
             planListAdapter.submitList(plans)
         })
     }
 
-    private fun addNewItem() {
-        // 새 항목 추가
+    private fun addNewItem() { // 새 항목 추가
         val newItem = PlanItem(title = "새 장소")
         viewModel.addPlan(newItem)
     }
 
-    private fun deleteCheckedItems() {
-        // 체크된 항목 삭제
+    private fun deleteCheckedItems() {  // 체크된 항목 삭제
         val checkedItems = planListAdapter.getCheckedItems()
         viewModel.deletePlans(checkedItems)
     }
 
-    private fun navigateToMap() {
-        // 지도 화면으로 네비게이션
+    private fun navigateToMap() { // 지도 화면으로 네비게이션
         findNavController().navigate(R.id.action_planList_to_mapFrag)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Fragment 파괴 시 삭제된 항목 정리
-        viewModel.clearDeletedItems()
+        viewModel.clearDeletedItems() // Fragment 파괴 시 삭제된 항목 정리
     }
 }
