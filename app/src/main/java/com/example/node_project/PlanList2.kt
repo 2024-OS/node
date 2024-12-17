@@ -28,32 +28,29 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // View Binding을 통해 레이아웃 인플레이트
         binding = FragmentPlanList2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState) // 추가된 super 호출
+        super.onViewCreated(view, savedInstanceState)
         setupMapView(savedInstanceState)
         setupUI()
         observeViewModel()
     }
 
     private fun setupMapView(savedInstanceState: Bundle?) {
-        // MapView 초기화 및 지도 로드
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
     }
 
     private fun setupUI() {
-        // 버튼 클릭 리스너 설정
         binding.searchButton.setOnClickListener {
-            val query = binding.placeEditText.text.toString()  // 검색어 입력받기
+            val query = binding.placeEditText.text.toString()
             if (query.isBlank()) {
                 Toast.makeText(requireContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.searchPlace(query, binding.placeEditText) // EditText 전달
+                viewModel.searchPlace(query, binding.placeEditText)
             }
         }
 
@@ -69,13 +66,14 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun observeViewModel() {
-        // ViewModel의 LiveData를 관찰하여 UI 업데이트
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
             updateMarkerList(markers.values.toList())
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
 
         viewModel.searchedLocation.observe(viewLifecycleOwner) { location ->
@@ -95,17 +93,14 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun setupMapOptions() {
-        // 초기 지도 설정
         moveCameraToLocation(viewModel.defaultLocation, 15f)
     }
 
     private fun moveCameraToLocation(location: LatLng, zoomLevel: Float) {
-        // 클릭된 마커 위치로 이동
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
     }
 
     private fun setupMarkerRecyclerView() {
-        // RecyclerView 설정
         binding.markerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         planList2Adapter = PlanList2Adapter(emptyList()) { marker ->
             moveCameraToLocation(marker.position, 15f)
@@ -114,11 +109,9 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateMarkerList(markers: List<Marker>) {
-        // 마커 목록 업데이트
         planList2Adapter.updateMarkers(markers)
     }
 
-    // MapView 생명주기 메서드들
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()

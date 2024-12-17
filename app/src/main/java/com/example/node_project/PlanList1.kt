@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.node_project.databinding.FragmentPlanListBinding
@@ -45,9 +44,9 @@ class PlanList1 : Fragment() {
     }
 
     private fun observePlans() {
-        viewModel.plans.observe(viewLifecycleOwner, Observer { plans ->
+        viewModel.plans.observe(viewLifecycleOwner) { plans ->
             planListAdapter.submitList(plans)
-        })
+        }
     }
 
     private fun addNewItem() {

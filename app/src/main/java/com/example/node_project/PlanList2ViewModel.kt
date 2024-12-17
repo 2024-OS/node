@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,13 +20,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.SphericalUtil
-import com.google.firebase.database.*
-import java.util.Locale
 
 @Suppress("DEPRECATION")
 class PlanList2ViewModel(application: Application) : AndroidViewModel(application) {
     @SuppressLint("StaticFieldLeak")
     private val context: Context = application.applicationContext
+    private val repository = PlanList2Repository()
+
     val defaultLocation = LatLng(37.60153324458494, 126.86503171920776)
     private val _markers = MutableLiveData<MutableMap<String, Marker>>(mutableMapOf())
     val markers: LiveData<MutableMap<String, Marker>> = _markers
@@ -37,7 +38,6 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
     val toastMessage: LiveData<String> = _toastMessage
 
     private lateinit var googleMap: GoogleMap
-    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("markers")
 
     // GoogleMap 객체 설정
     fun setGoogleMap(map: GoogleMap) {
@@ -45,67 +45,62 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // 장소 검색 함수
-    fun searchPlace(query: String, editText: EditText) { // EditText를 파라미터로 추가
-        val geoCoder = Geocoder(context, Locale.getDefault())
+    fun searchPlace(query: String, editText: EditText) {
+        val geoCoder = Geocoder(context)
         val results = geoCoder.getFromLocationName(query, 1)
         if (!results.isNullOrEmpty()) {
             val location = results[0]
-            val latitude = location.latitude
-            val longitude = location.longitude
-            _searchedLocation.value = LatLng(latitude, longitude)
+            _searchedLocation.value = LatLng(location.latitude, location.longitude)
             _searchedTitle.value = query
-            _toastMessage.value = "$query 위치가 검색되었습니다. '마커추가' 버튼을 누르세요."
-
-            // 검색 후 검색창 초기화
-            editText.text.clear() // EditText 초기화
+            editText.text.clear()
         } else {
-            _toastMessage.value = "장소를 찾을 수 없습니다."
+            showCustomToast("장소를 찾을 수 없습니다.", 500)
         }
     }
 
-    // 마커 추가 함수 (Firebase에 추가)
+    // 사용자 정의 Toast 함수
+    private fun showCustomToast(message: String, duration: Long) {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        toast.show()
+        toast.view?.postDelayed({ toast.cancel() }, duration)
+    }
+
+    // 마커 추가 함수
     fun addMarker() {
         val location = _searchedLocation.value
         val title = _searchedTitle.value
         if (location != null && title != null) {
             addMarkerAtLocation(location, title)
-            saveMarkerToFirebase(title, location.latitude, location.longitude) // Firebase에 저장
-            _toastMessage.value = "$title 마커가 추가되었습니다."
+            repository.saveMarker(title, location.latitude, location.longitude,
+                { showCustomToast("$title 마커가 추가되었습니다.", 500) },
+                { message -> showCustomToast(message, 500) }
+            )
             _searchedLocation.value = null
             _searchedTitle.value = null
         } else {
-            _toastMessage.value = "추가할 마커가 없습니다."
+            showCustomToast("추가할 마커가 없습니다.", 500)
         }
     }
 
-    // 마커를 Firebase에 저장하는 메서드
-    private fun saveMarkerToFirebase(title: String, latitude: Double, longitude: Double) {
-        val marker = PlanList2Item(title, latitude, longitude)
-        databaseReference.child(title).setValue(marker).addOnSuccessListener {
-            // 성공적으로 저장됨
-        }.addOnFailureListener {
-            _toastMessage.value = "마커 저장에 실패했습니다."
-        }
-    }
-
-    // 선택된 마커 삭제 함수 (Firebase에서 삭제)
+    // 선택된 마커 삭제 함수
     fun deleteSelectedMarker() {
         _selectedMarker.value?.let { marker ->
             val markerTitle = marker.title ?: return@let
-            removeMarker(markerTitle) // 지도 및 LiveData에서 제거
-            deleteMarkerFromFirebase(markerTitle) // Firebase에서 제거
-            _selectedMarker.value = null // 선택된 마커 초기화
-        } ?: run {
-            _toastMessage.value = "선택된 마커가 없습니다."
-        }
-    }
 
-    // Firebase에서 마커를 삭제하는 메서드
-    private fun deleteMarkerFromFirebase(title: String) {
-        databaseReference.child(title).removeValue().addOnSuccessListener {
-            // Firebase에서 성공적으로 삭제됨
-        }.addOnFailureListener {
-            _toastMessage.value = "마커 삭제에 실패했습니다."
+            // Firebase에서 마커 삭제
+            repository.deleteMarker(markerTitle,
+                {
+                    // 마커가 성공적으로 삭제된 후 Google Map에서 제거
+                    removeMarker(markerTitle)
+                    showCustomToast("$markerTitle 마커가 삭제되었습니다.", 500)
+                },
+                { message -> showCustomToast(message, 500) }
+            )
+
+            // 선택된 마커 초기화
+            _selectedMarker.value = null
+        } ?: run {
+            showCustomToast("선택된 마커가 없습니다.", 500)
         }
     }
 
@@ -115,7 +110,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         _selectedMarker.value = marker
         val distance = SphericalUtil.computeDistanceBetween(defaultLocation, marker.position)
         val distanceInKm = distance / 1000
-        _toastMessage.value = "${marker.title} 마커가 선택됨. 항공대와의 거리: ${String.format("%.2f", distanceInKm)} km"
+        showCustomToast("${marker.title} 선택됨. 항공대와의 거리: ${String.format("%.2f", distanceInKm)} km", 500)
         return true
     }
 
@@ -125,10 +120,12 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
             .position(location)
             .title(title)
             .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(title)))
-        val marker = markerOptions.toMarker(googleMap)
+        val marker = googleMap.addMarker(markerOptions)
         val newMarkers = _markers.value ?: mutableMapOf()
-        newMarkers[title] = marker
-        _markers.value = newMarkers
+        if (marker != null) {
+            newMarkers[title] = marker
+            _markers.value = newMarkers
+        }
     }
 
     // 마커 제거 함수
@@ -136,46 +133,39 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         val currentMarkers = _markers.value ?: return
         val markerToRemove = currentMarkers[title]
         if (markerToRemove != null) {
-            markerToRemove.remove() // 지도에서 마커 제거
-            currentMarkers.remove(title) // LiveData에서 마커 제거
+            // Google Map에서 마커 제거
+            markerToRemove.remove()
+
+            // LiveData에서 마커 제거
+            currentMarkers.remove(title)
             _markers.postValue(currentMarkers) // LiveData 업데이트
-            _toastMessage.value = "$title 마커가 삭제되었습니다."
-        } else {
-            _toastMessage.value = "$title 마커를 찾을 수 없습니다."
         }
     }
 
-    // 저장된 마커 불러오기
+    // 저장된 장소를 로드하는 함수
     fun loadSavedPlaces() {
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val newMarkers = mutableMapOf<String, Marker>() // 새로운 마커 맵 생성
-                googleMap.clear() // 지도 초기화 (기존 마커 제거)
-                for (dataSnapshot in snapshot.children) {
-                    val planList2Item = dataSnapshot.getValue(PlanList2Item::class.java)
-                    planList2Item?.let { data ->
-                        val location = LatLng(data.latitude, data.longitude)
+        repository.loadSavedPlaces(
+            { markers ->
+                // Google Map 초기화
+                googleMap.clear() // 기존 마커 제거
+                // 마커를 추가하기 위한 맵 생성
+                val newMarkers = mutableMapOf<String, Marker>()
+                markers.forEach { markerItem ->
+                    val markerOptions = MarkerOptions()
+                        .position(LatLng(markerItem.latitude, markerItem.longitude))
+                        .title(markerItem.title)
+                        .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(markerItem.title)))
 
-                        // 커스텀 마커 생성 및 적용
-                        val customIcon = BitmapDescriptorFactory.fromBitmap(createCustomMarker(data.title))
-                        val markerOptions = MarkerOptions()
-                            .position(location)
-                            .title(data.title)
-                            .icon(customIcon) // 커스텀 아이콘 설정
-
-                        val marker = googleMap.addMarker(markerOptions)
-                        if (marker != null) {
-                            newMarkers[data.title] = marker
-                        }
+                    // 마커를 추가하고 null 체크
+                    val marker = googleMap.addMarker(markerOptions)
+                    if (marker != null) {
+                        newMarkers[markerItem.title] = marker
                     }
                 }
-                _markers.postValue(newMarkers) // LiveData 업데이트
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                _toastMessage.value = "마커 로드에 실패했습니다."
-            }
-        })
+                _markers.value = newMarkers // LiveData 업데이트
+            },
+            { message -> showCustomToast(message, 500) }
+        )
     }
 
     // 커스텀 마커 생성 함수
@@ -190,10 +180,5 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         view.draw(canvas)
         return bitmap
-    }
-
-    // MarkerOptions를 Marker로 변환하는 확장 함수
-    private fun MarkerOptions.toMarker(map: GoogleMap): Marker {
-        return map.addMarker(this) ?: throw IllegalStateException("Failed to add marker to map")
     }
 }
