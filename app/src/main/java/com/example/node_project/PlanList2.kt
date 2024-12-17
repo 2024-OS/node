@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 class PlanList2 : Fragment(), OnMapReadyCallback {
+
     private lateinit var binding: FragmentPlanList2Binding
     private val viewModel: PlanList2ViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
@@ -33,7 +34,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //super.onViewCreated(view, savedInstanceState) 미사용
+        super.onViewCreated(view, savedInstanceState) // 추가된 super 호출
         setupMapView(savedInstanceState)
         setupUI()
         observeViewModel()
@@ -52,7 +53,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
             if (query.isBlank()) {
                 Toast.makeText(requireContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.searchPlace(query)
+                viewModel.searchPlace(query, binding.placeEditText) // EditText 전달
             }
         }
 
