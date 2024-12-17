@@ -4,4 +4,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_view_description">지도 표시 영역입니다.</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="schedule_title">%1$s 할 일</string>
 </resources>
