@@ -18,7 +18,7 @@ class PlanList : Fragment() {
     // RecyclerView 어댑터
     private lateinit var planListAdapter: PlanListAdapter
     // ViewModel 인스턴스 생성 (by viewModels()는 Kotlin 속성 위임을 사용)
-    private val viewModel: PlanViewModel by viewModels()
+    private val viewModel: PlanList1ViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

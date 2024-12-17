@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.*
 
-class PlanViewModel : ViewModel() {
+class PlanList1ViewModel : ViewModel() {
     // Firebase Realtime Database 참조
     private val database = FirebaseDatabase.getInstance().getReference("plans")
 
