@@ -21,7 +21,7 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentPlanList2Binding
     private val viewModel: PlanList2ViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
-    private lateinit var planMarkerListAdapter: PlanMarkerListAdapter
+    private lateinit var planList2Adapter: PlanList2Adapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,15 +107,15 @@ class PlanList2 : Fragment(), OnMapReadyCallback {
     private fun setupMarkerRecyclerView() {
         // RecyclerView 설정
         binding.markerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        planMarkerListAdapter = PlanMarkerListAdapter(emptyList()) { marker ->
+        planList2Adapter = PlanList2Adapter(emptyList()) { marker ->
             moveCameraToLocation(marker.position, 15f)
         }
-        binding.markerRecyclerView.adapter = planMarkerListAdapter
+        binding.markerRecyclerView.adapter = planList2Adapter
     }
 
     private fun updateMarkerList(markers: List<Marker>) {
         // 마커 목록 업데이트
-        planMarkerListAdapter.updateMarkers(markers)
+        planList2Adapter.updateMarkers(markers)
     }
 
     // MapView 생명주기 메서드들

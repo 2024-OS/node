@@ -26,23 +26,13 @@ import java.util.Locale
 class PlanList2ViewModel(application: Application) : AndroidViewModel(application) {
     @SuppressLint("StaticFieldLeak")
     private val context: Context = application.applicationContext
-
-    // 기본 위치 설정 (한국항공대학교 위치)
     val defaultLocation = LatLng(37.60153324458494, 126.86503171920776)
-
-    // 마커 목록을 위한 LiveData
     private val _markers = MutableLiveData<MutableMap<String, Marker>>(mutableMapOf())
     val markers: LiveData<MutableMap<String, Marker>> = _markers
-
-    // 선택된 마커를 위한 LiveData
     private val _selectedMarker = MutableLiveData<Marker?>()
-
-    // 검색된 위치와 제목을 위한 LiveData
     private val _searchedLocation = MutableLiveData<LatLng?>()
     val searchedLocation: LiveData<LatLng?> = _searchedLocation
     private val _searchedTitle = MutableLiveData<String?>()
-
-    // 토스트 메시지를 위한 LiveData
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
@@ -90,7 +80,7 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
 
     // 마커를 Firebase에 저장하는 메서드
     private fun saveMarkerToFirebase(title: String, latitude: Double, longitude: Double) {
-        val marker = MarkerData(title, latitude, longitude)
+        val marker = PlanList2Item(title, latitude, longitude)
         databaseReference.child(title).setValue(marker).addOnSuccessListener {
             // 성공적으로 저장됨
         }.addOnFailureListener {
@@ -162,8 +152,8 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
                 val newMarkers = mutableMapOf<String, Marker>() // 새로운 마커 맵 생성
                 googleMap.clear() // 지도 초기화 (기존 마커 제거)
                 for (dataSnapshot in snapshot.children) {
-                    val markerData = dataSnapshot.getValue(MarkerData::class.java)
-                    markerData?.let { data ->
+                    val planList2Item = dataSnapshot.getValue(PlanList2Item::class.java)
+                    planList2Item?.let { data ->
                         val location = LatLng(data.latitude, data.longitude)
 
                         // 커스텀 마커 생성 및 적용
@@ -207,10 +197,3 @@ class PlanList2ViewModel(application: Application) : AndroidViewModel(applicatio
         return map.addMarker(this) ?: throw IllegalStateException("Failed to add marker to map")
     }
 }
-
-// 마커 정보를 위한 데이터 클래스 추가
-data class MarkerData(
-    val title: String = "",
-    val latitude: Double = 0.0,
-    val longitude: Double = 0.0
-)

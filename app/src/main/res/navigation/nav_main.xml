@@ -33,7 +33,7 @@
     <!-- 장소선정 -->
     <fragment
         android:id="@+id/planList"
-        android:name="com.example.node_project.PlanList"
+        android:name="com.example.node_project.PlanList1"
         android:label="장소선정"
         tools:layout="@layout/fragment_plan_list">
 

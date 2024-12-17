@@ -11,21 +11,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.node_project.databinding.FragmentPlanListBinding
 
-
-class PlanList : Fragment() {
-    // View Binding을 위한 변수
+class PlanList1 : Fragment() {
     private lateinit var binding: FragmentPlanListBinding
-    // RecyclerView 어댑터
     private lateinit var planListAdapter: PlanListAdapter
-    // ViewModel 인스턴스 생성 (by viewModels()는 Kotlin 속성 위임을 사용)
     private val viewModel: PlanList1ViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-
-    ): View {  // View Binding을 통해 레이아웃 인플레이트
+    ): View {
         binding = FragmentPlanListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
@@ -35,7 +30,7 @@ class PlanList : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView() { // RecyclerView 어댑터 초기화 및 설정
+    private fun setupRecyclerView() {
         planListAdapter = PlanListAdapter { item ->
             viewModel.updatePlan(item)
         }
@@ -43,30 +38,30 @@ class PlanList : Fragment() {
         binding.recPlan.adapter = planListAdapter
     }
 
-    private fun setupButtonListeners() { // 버튼 클릭 리스너 설정
+    private fun setupButtonListeners() {
         binding.addButtonPlan.setOnClickListener { addNewItem() }
         binding.deleteButton.setOnClickListener { deleteCheckedItems() }
         binding.mapButton.setOnClickListener { navigateToMap() }
     }
 
-    private fun observePlans() { // ViewModel의 plans LiveData 관찰
+    private fun observePlans() {
         viewModel.plans.observe(viewLifecycleOwner, Observer { plans ->
             planListAdapter.submitList(plans)
         })
     }
 
-    private fun addNewItem() { // 새 항목 추가
-        val newItem = PlanItem(title = "새 장소")
+    private fun addNewItem() {
+        val newItem = PlanList1Item(title = "새 장소") // 기본 제목으로 새 아이템 생성
         viewModel.addPlan(newItem)
     }
 
-    private fun deleteCheckedItems() {  // 체크된 항목 삭제
-        val checkedItems = planListAdapter.getCheckedItems()
+    private fun deleteCheckedItems() {
+        val checkedItems = planListAdapter.getCheckedItems() // 체크된 아이템 가져오기
         viewModel.deletePlans(checkedItems)
     }
 
-    private fun navigateToMap() { // 지도 화면으로 네비게이션
-        findNavController().navigate(R.id.action_planList_to_mapFrag)
+    private fun navigateToMap() {
+        findNavController().navigate(R.id.action_planList_to_mapFrag) // 지도 화면으로 네비게이션
     }
 
     override fun onDestroyView() {

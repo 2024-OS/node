@@ -8,10 +8,10 @@ import com.example.node_project.databinding.CustomMarkerBinding
 import com.google.android.gms.maps.model.Marker
 
 // RecyclerView를 위한 어댑터 클래스
-class PlanMarkerListAdapter(
+class PlanList2Adapter(
     private var markers: List<Marker>,
     private val onMarkerClick: (Marker) -> Unit
-) : RecyclerView.Adapter<PlanMarkerListAdapter.MarkerViewHolder>() {
+) : RecyclerView.Adapter<PlanList2Adapter.MarkerViewHolder>() {
 
     // ViewHolder 클래스 정의
     inner class MarkerViewHolder(private val binding: CustomMarkerBinding) : RecyclerView.ViewHolder(binding.root) {

@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
-class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit)
-    : ListAdapter<PlanItem, PlanListAdapter.PlanViewHolder>(PlanDiffCallback()) {
+class PlanListAdapter(private val onItemUpdated: (PlanList1Item) -> Unit)
+    : ListAdapter<PlanList1Item, PlanListAdapter.PlanViewHolder>(PlanDiffCallback()) {
 
     inner class PlanViewHolder(private val binding: ItemPlanBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PlanItem) {
+        fun bind(item: PlanList1Item) {
             // 아이템 데이터를 뷰에 바인딩
             binding.itemName.setText(item.title)
             binding.scoreText.text = item.score.toString()
@@ -51,16 +51,16 @@ class PlanListAdapter(private val onItemUpdated: (PlanItem) -> Unit)
     }
 
     // 체크된 아이템 반환
-    fun getCheckedItems(): List<PlanItem> = currentList.filter { it.isChecked }
+    fun getCheckedItems(): List<PlanList1Item> = currentList.filter { it.isChecked }
 }
 
 // DiffUtil을 사용한 리스트 업데이트 최적화
-class PlanDiffCallback : DiffUtil.ItemCallback<PlanItem>() {
-    override fun areItemsTheSame(oldItem: PlanItem, newItem: PlanItem): Boolean {
+class PlanDiffCallback : DiffUtil.ItemCallback<PlanList1Item>() {
+    override fun areItemsTheSame(oldItem: PlanList1Item, newItem: PlanList1Item): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: PlanItem, newItem: PlanItem): Boolean {
+    override fun areContentsTheSame(oldItem: PlanList1Item, newItem: PlanList1Item): Boolean {
         return oldItem == newItem
     }
 }
