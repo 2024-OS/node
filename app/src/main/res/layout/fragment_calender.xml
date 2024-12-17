@@ -91,29 +91,29 @@
                 <!-- 추가 버튼 -->
                 <Button
                     android:id="@+id/button3"
-                    android:layout_width="0dp"
+                    android:layout_width="23dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:layout_marginEnd="8dp"
+                    android:layout_weight="2"
                     android:backgroundTint="#89A4F8"
+                    android:onClick="@{() -> viewModel.addTask(`새 작업`)}"
                     android:text="추가"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:onClick="@{() -> viewModel.addTask(`새 작업`)}" />
+                    android:textStyle="bold" />
 
                 <!-- 삭제 버튼 -->
                 <Button
                     android:id="@+id/button4"
-                    android:layout_width="0dp"
+                    android:layout_width="18dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:backgroundTint="#F0726F"
+                    android:onClick="@{() -> viewModel.removeCheckedTasks()}"
                     android:text="삭제"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:onClick="@{() -> viewModel.removeCheckedTasks()}" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- 흰색 박스로 감싼 RecyclerView -->
