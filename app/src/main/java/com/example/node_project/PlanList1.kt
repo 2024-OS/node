@@ -13,7 +13,7 @@ import com.example.node_project.databinding.FragmentPlanListBinding
 // 계획 목록을 표시하는 Fragment 클래스
 class PlanList1 : Fragment() {
     private lateinit var binding: FragmentPlanListBinding // Fragment와 XML 레이아웃을 연결하는 바인딩 객체
-    private lateinit var planListAdapter: PlanListAdapter // RecyclerView에 사용할 어댑터
+    private lateinit var planListAdapter: PlanList1Adapter // RecyclerView에 사용할 어댑터
     private val viewModel: PlanList1ViewModel by viewModels() // ViewModel을 통해 UI 관련 데이터를 관리
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class PlanList1 : Fragment() {
 
     private fun setupRecyclerView() {
         // RecyclerView의 어댑터를 설정하고 레이아웃 매니저를 정의
-        planListAdapter = PlanListAdapter { item -> // 아이템 업데이트를 위한 람다 함수
+        planListAdapter = PlanList1Adapter { item -> // 아이템 업데이트를 위한 람다 함수
             viewModel.updatePlan(item) // ViewModel을 통해 아이템 업데이트
         }
         binding.recPlan.layoutManager = LinearLayoutManager(context) // 수직으로 나열되는 레이아웃 매니저 설정

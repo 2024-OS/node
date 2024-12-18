@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.node_project.databinding.ItemPlanBinding
 
 // RecyclerView의 어댑터 클래스: 계획 아이템을 표시하고 관리
-class PlanListAdapter(private val onItemUpdated: (PlanList1Item) -> Unit) : RecyclerView.Adapter<PlanListAdapter.PlanViewHolder>() {
+class PlanList1Adapter(private val onItemUpdated: (PlanList1Item) -> Unit) : RecyclerView.Adapter<PlanList1Adapter.PlanViewHolder>() {
 
     private var planList: List<PlanList1Item> = listOf() // 계획 목록
 
