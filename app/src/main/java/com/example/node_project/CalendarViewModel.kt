@@ -3,7 +3,7 @@ package com.example.node_project.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.node_project.models.ScheduleItem
+import com.example.node_project.models.CalendarScheduleItem
 import com.example.node_project.repository.CalendarTaskRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,10 +14,10 @@ class CalendarViewModel : ViewModel() {
     private val _selectedDate = MutableLiveData<String>()
     val selectedDate: LiveData<String> get() = _selectedDate
 
-    private val _tasksForDate = MutableLiveData<List<ScheduleItem>>()
-    val tasksForDate: LiveData<List<ScheduleItem>> get() = _tasksForDate
+    private val _tasksForDate = MutableLiveData<List<CalendarScheduleItem>>()
+    val tasksForDate: LiveData<List<CalendarScheduleItem>> get() = _tasksForDate
 
-    private val allTasks = mutableMapOf<String, MutableList<ScheduleItem>>()
+    private val allTasks = mutableMapOf<String, MutableList<CalendarScheduleItem>>()
 
     fun initializeDate() {
         val today = getCurrentDate()
@@ -46,7 +46,7 @@ class CalendarViewModel : ViewModel() {
     fun addTask(task: String) {
         val date = _selectedDate.value ?: return
         val taskList = allTasks.getOrPut(date) { mutableListOf() }
-        taskList.add(ScheduleItem(task))
+        taskList.add(CalendarScheduleItem(task))
 
         allTasks[date] = taskList
         _tasksForDate.postValue(taskList) // postValue 사용
