@@ -6,19 +6,19 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
-import com.example.node_project.models.ScheduleItem
+import com.example.node_project.models.CalendarScheduleItem
 
-class ScheduleAdapter(
-    private var scheduleList: MutableList<ScheduleItem>,
+class CalendarScheduleAdapter(
+    private var scheduleList: MutableList<CalendarScheduleItem>,
     private val onItemChecked: (Int, Boolean) -> Unit,
     private val onItemTextChanged: (Int, String) -> Unit
-) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+) : RecyclerView.Adapter<CalendarScheduleAdapter.ScheduleViewHolder>() {
 
     inner class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskEditText: EditText = itemView.findViewById(R.id.taskTextView)
         val checkBox: CheckBox = itemView.findViewById(R.id.taskCheckBox)
 
-        fun bind(task: ScheduleItem, position: Int) {
+        fun bind(task: CalendarScheduleItem, position: Int) {
             taskEditText.setText(task.task)
             checkBox.isChecked = task.isChecked
 
@@ -45,7 +45,7 @@ class ScheduleAdapter(
 
     override fun getItemCount(): Int = scheduleList.size
 
-    fun updateTasks(newTasks: List<ScheduleItem>) {
+    fun updateTasks(newTasks: List<CalendarScheduleItem>) {
         scheduleList = newTasks.toMutableList()
         (this as RecyclerView.Adapter<*>).notifyDataSetChanged()
     }

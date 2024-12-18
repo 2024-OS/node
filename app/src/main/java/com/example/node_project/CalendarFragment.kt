@@ -17,7 +17,7 @@ class CalendarFragment : Fragment() {
     private var _binding: FragmentCalenderBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: ScheduleAdapter
+    private lateinit var adapter: CalendarScheduleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -53,7 +53,7 @@ class CalendarFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ScheduleAdapter(
+        adapter = CalendarScheduleAdapter(
             mutableListOf(),
             { position, isChecked -> viewModel.updateTaskCheckedState(position, isChecked) },
             { position, text -> viewModel.updateTaskText(position, text) }
