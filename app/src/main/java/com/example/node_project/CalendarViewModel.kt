@@ -28,8 +28,10 @@ class CalendarViewModel : ViewModel() {
 
     // 현재 날짜를 지정된 형식의 문자열로 반환
     private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")) // 한국 시간대 설정
         val format = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
-        return format.format(Calendar.getInstance().time)
+        format.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+        return format.format(calendar.time)
     }
 
     // 사용자가 특정 날짜를 선택 시
