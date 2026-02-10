@@ -14,14 +14,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
 
         // Firebase 초기화
-        if (FirebaseApp.getApps(this).isEmpty()) // firebase가 초기화 안되면
-        {
-            FirebaseApp.initializeApp(this) // 초기화하기
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this)
         }
+
+        setContentView(R.layout.activity_main)
 
 
         // 내비게이션 바 영역
